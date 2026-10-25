@@ -1,35 +1,87 @@
-# Prime-UI
+# PRIME — Product, Retail and Tool Inventory Management
 
-PRIME — Public Interactive Preview
+Interactive front-end demonstration for the three PRIME products:
 
-A standalone, static interactive prototype of PRIME with three editions:
+- **PIM** — Product Inventory Management: material requests, approvals, procurement, inventory, assets, projects, custody checks and reports.
+- **RIM** — Retail Inventory Management: POS, orders, returns, pricing, store stock, customers and fulfilment.
+- **TIM** — Tool Inventory Management: equipment, crib management, check-outs, inspections, calibration, maintenance, custody and compliance.
 
-- PIM: Product Inventory Management
-- RIM: Retail Inventory Management
-- TIM: Tool Inventory Management
+## Run immediately
 
-## Use
+No installation or build command is required. Extract this ZIP and open `index.html` in your browser. Or start a local server from this folder:
 
-Open `index.html` in a browser or publish the folder from a static web host. No external scripts, fonts, accounts or installation required.
+```bash
+python3 -m http.server 8000
+```
 
-Users can navigate extensive edition-specific sidebars, expand workflows, search/filter records, view details, create session-local draft records, export CSV, use a demonstration point of sale, and leave browser-local feedback. The UI is responsive on desktop and mobile.
+Then open `http://localhost:8000/`.
 
-## Publish with GitHub Pages
+## Safely publish to the existing GitHub repository
 
-1. The intended repository is `BankMoney24/Prime-UI`. Push these website files to the repository root, including `assets/`.
-3. In Repository settings → Pages → Build and deployment, select Deploy from a branch → `main` → `/ (root)`. Save.
-4. After GitHub Pages finishes deploying, open the URL displayed in Settings → Pages. On ordinary user accounts, it usually follows `https://<account>.github.io/<repo>/` but use GitHub's displayed URL, not a guessed link.
+This package targets [BankMoney24/Prime-UI](https://github.com/BankMoney24/Prime-UI). The repository already exists. **Do not use `git init`, `git remote add origin`, or `git push --force` on this ZIP.**
 
-## Product and privacy boundaries
+**macOS / Linux** (run inside the extracted `Prime-UI` folder):
 
-- This is an interface prototype, **not** a production ERP.
-- All seeded data is fictional. No payments are processed. No personal or production records are accessed.
-- Demonstration drafts and feedback use `localStorage` on each visitor's browser. They are **not shared back to the product owner**. A visitor can export their own saved feedback from Help → Leave feedback. To collect feedback centrally, connect a suitable approved form or backend endpoint.
-- GitHub Pages is publicly viewable when enabled. Browser source files are inspectable by visitors, as with any front-end website. Do not put secrets, private API credentials, protected product documentation or conversation transcripts into this repository.
+```bash
+bash push-to-github.sh
+```
 
-## File contents
+**Windows PowerShell** (run inside the extracted folder):
 
-- `index.html`: shell, metadata and application entry
-- `styles.css`: responsive styles
-- `app.js`: navigation registry, screens and interactive demonstration workflows
-- `assets/prime-mark.svg`: PRIME icon
+```powershell
+powershell -ExecutionPolicy Bypass -File .\push-to-github.ps1
+```
+
+The scripts clone the existing `main` branch first, copy the updated files on top, commit only changed files, fetch the latest upstream changes, and push without rewriting remote history. Re-running a successful script with unchanged files reports `Already up to date`.
+
+These scripts cannot bypass GitHub authentication or repository permissions. Your local Git credentials need write access to `BankMoney24/Prime-UI`. If prompted to log in, authenticate as `BankMoney24` or a collaborator with write access. A `403` or `Permission denied` requires fixing account/permissions, not repeating the push.
+
+To configure a missing Git commit identity:
+
+```bash
+git config --global user.name "Your Git Name"
+git config --global user.email "your-email@example.com"
+```
+
+The provided files contain no `.git` directory, so they cannot produce an unrelated-history conflict.
+
+## GitHub Pages
+
+Open repository Settings → Pages → Build and deployment, select **Deploy from a branch**, branch `main`, folder `/ (root)`, and Save. The published URL usually follows `https://bankmoney24.github.io/Prime-UI/`, but use the URL GitHub displays after deployment.
+
+## Key interactions
+
+- Edition switcher, grouped sidebar navigation, collapsed navigation and mobile drawer.
+- Dashboard with quick actions, chart-free key activity cards and five time ranges.
+- Chat and Notifications in the header, profile dropdown, settings and account preview.
+- Explore More, subscription overview and support navigation.
+- Product, procurement, inventory, retail POS and tool register demonstration flows.
+- Search, status filters, record details, CSV export, sample forms and browser-local feedback.
+
+## What is not included
+
+This is a **static UI prototype** with fictional sample data. It does not include a production database, authentication, payment processing, or shared feedback across browsers. Changes created while testing are browser-local. No real supplier orders, payments, inventory balances or messages are submitted.
+
+## Source files
+
+- `index.html` — static website entry point
+- `styles.css` — complete responsive UI design
+- `app.js` — navigation, all edition data, screens and interactions
+- `assets/prime-mark.svg` — brand mark
+- `tests/verify.mjs` — source checks (`node tests/verify.mjs`)
+- `push-to-github.sh` / `push-to-github.ps1` — safe deployment scripts
+- `.nojekyll` — GitHub Pages asset compatibility
+
+
+## Restored original full dashboard
+
+The Home dashboard restores the October 25 reference layout below the chart-free Key activity cards:
+
+- My to-do: approval, receiving, supplier and overdue-task queues.
+- Stock health (PIM), store stock health (RIM) or tool readiness (TIM).
+- Recent activity with navigable event entries.
+- My material requests / sales orders / tool requests with matching new-record actions.
+- Get started readiness checklist and an interactive four-step quick tour.
+- Explore More, plan usage, profile, Chat, notifications and Contact Support remain.
+
+The original local ERP database is not included. Example content is fictional and all interactions are safe demonstrations.
