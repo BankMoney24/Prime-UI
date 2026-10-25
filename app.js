@@ -107,7 +107,36 @@ function modal(){if(!S.modal)return '';if(S.modal==='tour'){const steps=[['Find 
 if(S.modal==='feedback'){return `<div class="modal-backdrop" data-action="modal-backdrop"><form class="modal" id="feedback-form" role="dialog" aria-modal="true" aria-label="Give feedback"><div class="modal-head"><div><h2>Feedback on PRIME</h2><p>Tell us what needs changing on ${S.edition} / ${esc(S.page)}</p></div><button type="button" class="icon-btn" data-action="close-modal">${icon('close')}</button></div><div class="field"><label for="fb-rating">Type of feedback</label><select id="fb-rating" name="rating"><option>Usability issue</option><option>Missing feature</option><option>Visual improvement</option><option>Positive feedback</option><option>Other</option></select></div><div class="field"><label for="fb-text">What would you change?</label><textarea id="fb-text" name="message" minlength="4" required placeholder="Describe the screen, issue and what you expected..."></textarea></div><div class="field"><label for="fb-name">Your name (optional)</label><input id="fb-name" name="name" placeholder="Optional"></div><div class="info-bar" style="margin-top:17px">${icon('alert')} This demo stores feedback in your browser only. Export it to share with the PRIME team.</div><div class="modal-foot"><button type="button" class="secondary" data-action="close-modal">Cancel</button><button class="primary" type="submit">Save feedback</button></div></form></div>`}
 return `<div class="modal-backdrop" data-action="modal-backdrop"><form class="modal" id="record-form" role="dialog" aria-modal="true" aria-label="Create ${esc(S.modal)}"><div class="modal-head"><div><h2>${esc(S.modal)}</h2><p>Create a sample draft in ${S.edition}. This does not update production data.</p></div><button type="button" class="icon-btn" data-action="close-modal">${icon('close')}</button></div><div class="field"><label for="record-title">Record name or description</label><input name="title" id="record-title" placeholder="Enter item, tool or request" required minlength="3"></div><div class="field"><label for="record-owner">Assigned person or location</label><input name="owner" id="record-owner" placeholder="e.g. Engineering"></div><div class="field"><label for="record-note">Details (optional)</label><textarea id="record-note" name="note" placeholder="Add context for this draft"></textarea></div><div class="modal-foot"><button type="button" class="secondary" data-action="close-modal">Cancel</button><button type="submit" class="primary">Save draft</button></div></form></div>`}
 function layout(){return `<div class="app ${S.compact?'compact-layout':''}">${sidebar()}<div class="workspace">${topbar()}<main class="main">${topIntro()}${S.detail?detailPage():['PRIME Overview','My Products'].includes(S.page)?primeOverview():S.page==='Home'?overview():modulePage()}</main></div>${mobileNav()}${S.mobile?`<div class="drawer-backdrop" data-action="mobile-close"></div><aside class="drawer">${sidebar().replace('class="sidebar"','class="sidebar" style="position:relative;width:100%;height:100%;display:flex;border:0"')}</aside>`:''}${modal()}${S.toast?`<div class="toast" role="status">${esc(S.toast)}</div>`:''}</div>`}
-function draw(){document.title=`${S.page} · ${S.edition} · PRIME`;ROOT.innerHTML=layout();if(S.toast){clearTimeout(draw.toastTimer);draw.toastTimer=setTimeout(()=>{S.toast='';const toast=document.querySelector('.toast');if(toast)toast.remove()},3800)}}
+const dashboardExpandedSections=new Set();
+function setupDashboardAccordions(){
+ const titles=['My to-do','Stock health','Recent activity','My material requests','Get started','Quick tour'];
+ const panels=[...document.querySelectorAll('.classic-lower .classic-panel, .classic-lower .classic-tour')];
+ panels.forEach((panel,index)=>{
+  const id='dashboard-section-'+index;
+  const header=panel.querySelector('.classic-panel-head')||panel.querySelector('.classic-tour-copy');
+  if(!header)return;
+  const open=dashboardExpandedSections.has(id);
+  panel.classList.add('dashboard-accordion');
+  panel.classList.toggle('dashboard-accordion-closed',!open);
+  const title=panel.querySelector('h2,h3')?.textContent?.trim()||titles[index]||'Section';
+  const button=document.createElement('button');
+  button.type='button';button.className='dashboard-accordion-toggle';
+  button.setAttribute('aria-expanded',String(open));
+  button.setAttribute('aria-label',(open?'Collapse ':'Expand ')+title);
+  button.textContent=(open?'−':'+');
+  header.appendChild(button);
+  button.addEventListener('click',()=>{
+   if(dashboardExpandedSections.has(id))dashboardExpandedSections.delete(id);
+   else dashboardExpandedSections.add(id);
+   const nowOpen=dashboardExpandedSections.has(id);
+   panel.classList.toggle('dashboard-accordion-closed',!nowOpen);
+   button.textContent=nowOpen?'−':'+';
+   button.setAttribute('aria-expanded',String(nowOpen));
+   button.setAttribute('aria-label',(nowOpen?'Collapse ':'Expand ')+title);
+  });
+ });
+}
+function draw(){document.title=`${S.page} · ${S.edition} · PRIME`;ROOT.innerHTML=layout();setupDashboardAccordions();if(S.toast){clearTimeout(draw.toastTimer);draw.toastTimer=setTimeout(()=>{S.toast='';const toast=document.querySelector('.toast');if(toast)toast.remove()},3800)}}
 function toast(m){S.toast=m;draw()}
 function csvDownload(name,rows){const data=rows.map(r=>r.map(v=>'"'+String(v??'').replaceAll('"','""')+'"').join(',')).join('\r\n');download(name,new Blob([data],{type:'text/csv;charset=utf-8'}))}
 function download(name,blob){let a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),5000)}

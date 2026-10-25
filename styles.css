@@ -32,3 +32,19 @@
 @media(max-width:1250px){.classic-pair{grid-template-columns:1fr}.classic-health-body{justify-content:flex-start}.classic-tour{min-height:240px}}
 @media(min-width:1251px) and (max-width:1480px){.classic-health-ring{width:130px;height:130px;flex-basis:130px}.classic-health-ring>div{width:98px;height:98px}.classic-health-body{gap:12px}}
 @media(max-width:680px){.classic-lower{gap:13px}.classic-pair{gap:13px}.classic-panel{padding:15px}.classic-panel-head h2{font-size:16px}.classic-activity-date{display:none}.classic-health-body{gap:14px}.classic-health-ring{width:120px;height:120px;flex-basis:120px}.classic-health-ring>div{width:91px;height:91px}.classic-health-ring strong{font-size:25px}.classic-health-lines div{padding:7px 0}.classic-empty{min-height:235px}.classic-tour{padding:18px}.classic-tour-art{flex-basis:90px;transform:scale(.83);transform-origin:right center}}
+
+/* Collapsed by default: users expand sections with the + control. */
+.classic-lower .dashboard-accordion{position:relative;min-height:0!important;align-self:start}
+.classic-lower .dashboard-accordion .classic-panel-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.classic-lower .dashboard-accordion-toggle{order:10;margin-left:auto;display:grid;place-items:center;flex:0 0 32px;height:32px;border:1px solid #d9e5f1;border-radius:9px;background:#edf4ff;color:#1e59cc;font-size:22px;font-weight:500;line-height:1;cursor:pointer}
+.classic-lower .dashboard-accordion-toggle:hover{background:#dceaff}
+.classic-lower .dashboard-accordion-closed > :not(.classic-panel-head):not(.classic-tour-copy){display:none!important}
+.classic-lower .dashboard-accordion-closed .classic-tour-copy > :not(h3):not(.dashboard-accordion-toggle){display:none!important}
+.classic-lower .dashboard-accordion-closed .classic-panel-head .quiet-link{display:none!important}
+.classic-lower .dashboard-accordion-closed{padding-bottom:14px!important}
+.classic-lower .dashboard-accordion-closed.classic-tour{min-height:0!important}
+.classic-lower .dashboard-accordion-closed .classic-tour-copy{display:flex;align-items:center;gap:12px;width:100%;padding:0!important}
+.classic-lower .dashboard-accordion-closed .classic-tour-copy h3{margin:0;flex:1;font-size:16px}
+.classic-lower .dashboard-accordion-closed .classic-panel-head{margin-bottom:0!important;padding-bottom:0!important}
+.classic-lower .classic-pair{align-items:start}
+@media(max-width:700px){.classic-lower .dashboard-accordion-toggle{width:32px;flex-basis:32px}}
