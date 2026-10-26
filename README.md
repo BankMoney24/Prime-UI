@@ -85,3 +85,7 @@ The Home dashboard restores the October 25 reference layout below the chart-free
 - Explore More, plan usage, profile, Chat, notifications and Contact Support remain.
 
 The original local ERP database is not included. Example content is fictional and all interactions are safe demonstrations.
+
+## Dashboard update (26 October 2026)
+
+PIM quick actions use **Ask to Buy** and **Receive Delivery**. The six expandable dashboard sections appear below **Explore more** and remain collapsed by default. Click + to expand, − to close.
