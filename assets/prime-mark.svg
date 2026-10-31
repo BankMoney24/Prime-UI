@@ -1,1 +1,13 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64"><rect width="64" height="64" rx="18" fill="#2057d8"/><path d="M20 13h16c12 0 18 7 18 17s-7 17-19 17h-7v6h-8V13zm8 8v18h7c7 0 11-3 11-9s-4-9-11-9h-7z" fill="white"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="222 245 586 497" role="img" aria-label="Prime">
+  <defs>
+    <linearGradient id="pb" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0B82FF"/><stop offset="1" stop-color="#0A63EE"/></linearGradient>
+    <linearGradient id="ps" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0757DE"/><stop offset="1" stop-color="#064BC9"/></linearGradient>
+  </defs>
+  <path fill="url(#pb)" d="M432 252H648A153 153 0 0 1 648 558H606L699 438A57 57 0 0 0 652 348H442A26 26 0 0 1 416 322V268A16 16 0 0 1 432 252Z"/>
+  <path fill="url(#ps)" d="M455 457H655L572 549H500V690A45 45 0 0 1 455 735H420A8 8 0 0 1 412 727V500A43 43 0 0 1 455 457Z"/>
+  <rect x="319" y="376" width="64" height="63" rx="9" fill="#0A50D6"/>
+  <rect x="412" y="376" width="63" height="63" rx="9" fill="#0B7AFB"/>
+  <rect x="229" y="466" width="63" height="63" rx="9" fill="#0B7AFB"/>
+  <rect x="319" y="466" width="64" height="63" rx="9" fill="#0A6CF2"/>
+  <rect x="319" y="557" width="64" height="65" rx="9" fill="#0A50D6"/>
+</svg>

@@ -1,91 +1,59 @@
-# PRIME — Product, Retail and Tool Inventory Management
+# PRIME — Inventory Management
 
-Interactive front-end demonstration for the three PRIME products:
+Interactive public frontend for **PIM** (Product Inventory Management), **RIM** (Retail Inventory Management) and **TIM** (Tool Inventory Management). Designed for team walkthroughs and UI reviews.
 
-- **PIM** — Product Inventory Management: material requests, approvals, procurement, inventory, assets, projects, custody checks and reports.
-- **RIM** — Retail Inventory Management: POS, orders, returns, pricing, store stock, customers and fulfilment.
-- **TIM** — Tool Inventory Management: equipment, crib management, check-outs, inspections, calibration, maintenance, custody and compliance.
+## Start locally
 
-## Run immediately
-
-No installation or build command is required. Extract this ZIP and open `index.html` in your browser. Or start a local server from this folder:
+You need no dependencies or build step. Run a static server in this directory:
 
 ```bash
 python3 -m http.server 8000
 ```
 
-Then open `http://localhost:8000/`.
+Then visit `http://localhost:8000/#/pim/dashboard`.
 
-## Safely publish to the existing GitHub repository
+Alternatively use `npx serve .` if Node is available. Use a local server because the application is written as JavaScript modules.
 
-This package targets [BankMoney24/Prime-UI](https://github.com/BankMoney24/Prime-UI). The repository already exists. **Do not use `git init`, `git remote add origin`, or `git push --force` on this ZIP.**
+## Deploy to BankMoney24/Prime-UI
 
-**macOS / Linux** (run inside the extracted `Prime-UI` folder):
-
-```bash
-bash push-to-github.sh
-```
-
-**Windows PowerShell** (run inside the extracted folder):
-
-```powershell
-powershell -ExecutionPolicy Bypass -File .\push-to-github.ps1
-```
-
-The scripts clone the existing `main` branch first, copy the updated files on top, commit only changed files, fetch the latest upstream changes, and push without rewriting remote history. Re-running a successful script with unchanged files reports `Already up to date`.
-
-These scripts cannot bypass GitHub authentication or repository permissions. Your local Git credentials need write access to `BankMoney24/Prime-UI`. If prompted to log in, authenticate as `BankMoney24` or a collaborator with write access. A `403` or `Permission denied` requires fixing account/permissions, not repeating the push.
-
-To configure a missing Git commit identity:
+On a Mac with GitHub write access:
 
 ```bash
-git config --global user.name "Your Git Name"
-git config --global user.email "your-email@example.com"
+cd ~/Downloads/PRIME-Team-Review-Frontend
+bash deploy-to-github.sh
 ```
 
-The provided files contain no `.git` directory, so they cannot produce an unrelated-history conflict.
+The script checks the frontend, clones the latest `main` branch, updates only the web preview files, commits and pushes. It does not reset repository history, force-push or rely on a preexisting `.git` directory or `.gitignore` file. It can be rerun if the website needs updating.
 
-## GitHub Pages
+In the GitHub repository's **Settings → Pages**, select **Deploy from a branch → main → / (root)**. GitHub Pages then serves the website at the address displayed in Settings → Pages (normally `https://bankmoney24.github.io/Prime-UI/`). Confirm the published address before sharing it.
 
-Open repository Settings → Pages → Build and deployment, select **Deploy from a branch**, branch `main`, folder `/ (root)`, and Save. The published URL usually follows `https://bankmoney24.github.io/Prime-UI/`, but use the URL GitHub displays after deployment.
+The connected ChatGPT GitHub account may have read-only access. If so, push through your own authenticated Mac Terminal or give the connector write access.
 
-## Key interactions
+## What's inside
 
-- Edition switcher, grouped sidebar navigation, collapsed navigation and mobile drawer.
-- Dashboard with quick actions, chart-free key activity cards and five time ranges.
-- Chat and Notifications in the header, profile dropdown, settings and account preview.
-- Explore More, subscription overview and support navigation.
-- Product, procurement, inventory, retail POS and tool register demonstration flows.
-- Search, status filters, record details, CSV export, sample forms and browser-local feedback.
+- `index.html` — accessible app entry and metadata.
+- `styles.css` — PRIME design tokens, responsive desktop and mobile UI, tables, modals, dashboard, focus states and navigation.
+- `data.js` — fictional but domain-specific module schemas and sample records.
+- `app.js` — shared shell, hash routing, PIM/RIM/TIM modules, search, Scan fallback, local forms, reviews and demo flows.
+- `assets/prime-mark.svg` — PRIME logo.
+- `tests/qa.mjs` and `tests/interactions.mjs` — Node tests of routes, screen rendering, sample schema and interactions.
+- `docs/` — UX coverage, product decisions and a team review guide.
+- `deploy-to-github.sh` — safe publishing script.
 
-## What is not included
+## Interaction guide
 
-This is a **static UI prototype** with fictional sample data. It does not include a production database, authentication, payment processing, or shared feedback across browsers. Changes created while testing are browser-local. No real supplier orders, payments, inventory balances or messages are submitted.
+1. Switch between PIM, RIM and TIM from the product switcher.
+2. Use the sidebar for common work; choose **All modules** for everything else.
+3. Use **Quick actions** at the top of each dashboard.
+4. Search by module, item name or ID. The Scan button allows manual lookup and camera scanning when the browser supports it.
+5. Open record rows to inspect details. Demonstration forms create browser-local drafts.
+6. RIM Point of Sale builds a local cart and simulates a sale without charging money.
+7. Open **Team feedback** from Explore more or Help. Team members can share their comments centrally through [GitHub Issues](https://github.com/BankMoney24/Prime-UI/issues) if they have GitHub accounts.
 
-## Source files
+## What this is not
 
-- `index.html` — static website entry point
-- `styles.css` — complete responsive UI design
-- `app.js` — navigation, all edition data, screens and interactions
-- `assets/prime-mark.svg` — brand mark
-- `tests/verify.mjs` — source checks (`node tests/verify.mjs`)
-- `push-to-github.sh` / `push-to-github.ps1` — safe deployment scripts
-- `.nojekyll` — GitHub Pages asset compatibility
+This is a **frontend demonstration**. It does not perform production authentication, payments, approvals, inventory transfers, supplier procurement, shared messaging or persistent multi-user review. Example records, people and metrics are fictional. Drafts and comments stay in local browser storage, not a shared server. No production PHP files or databases are bundled in the website.
 
+When integrating these frontend components into the actual PRIME PHP backend, retain its existing authentication, tenancy, role checks, transactions, CSRF protection, routes and audit behavior. The public website is not a replacement for those controls.
 
-## Restored original full dashboard
-
-The Home dashboard restores the October 25 reference layout below the chart-free Key activity cards:
-
-- My to-do: approval, receiving, supplier and overdue-task queues.
-- Stock health (PIM), store stock health (RIM) or tool readiness (TIM).
-- Recent activity with navigable event entries.
-- My material requests / sales orders / tool requests with matching new-record actions.
-- Get started readiness checklist and an interactive four-step quick tour.
-- Explore More, plan usage, profile, Chat, notifications and Contact Support remain.
-
-The original local ERP database is not included. Example content is fictional and all interactions are safe demonstrations.
-
-## Dashboard update (26 October 2026)
-
-PIM quick actions use **Ask to Buy** and **Receive Delivery**. The six expandable dashboard sections appear below **Explore more** and remain collapsed by default. Click + to expand, − to close.
+The frontend was based on the source implementation and previously supplied UI screenshots. It was not derived from the later PDF wireframes.
