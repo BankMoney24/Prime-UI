@@ -1,59 +1,66 @@
-# PRIME — Inventory Management
+# PRIME — PIM deep inventory frontend
 
-Interactive public frontend for **PIM** (Product Inventory Management), **RIM** (Retail Inventory Management) and **TIM** (Tool Inventory Management). Designed for team walkthroughs and UI reviews.
+PIM is now the first fully expanded edition of the PRIME team-review frontend. RIM and TIM remain available through the existing shared shell and keep their original interactions.
 
-## Start locally
-
-You need no dependencies or build step. Run a static server in this directory:
+## Start and preview
 
 ```bash
+cd PRIME-PIM-Deep-Overhaul
 python3 -m http.server 8000
 ```
 
-Then visit `http://localhost:8000/#/pim/dashboard`.
+Open `http://localhost:8000/#/pim/dashboard`.
 
-Alternatively use `npx serve .` if Node is available. Use a local server because the application is written as JavaScript modules.
+PIM primary routes: Requests, Catalogue, Inventory, Purchasing, Assets and Projects. More modules are available in All modules, including Batches & traceability, Suppliers, Maintenance, Stock counts, Locations, Budgets, Custody checks, Warranties, People & accountability, Imports, Reports, Replenishment, Field app, Transfers, Contracts, Kits, Bookings and Bills.
 
-## Deploy to BankMoney24/Prime-UI
+### Working example flows
 
-On a Mac with GitHub write access:
+1. **Requests:** create a draft → submit → approve → allocate available stock → issue → return usable or damaged materials.
+2. **Purchasing:** create a purchase draft → submit → approve → send to supplier → receive part or all of the outstanding quantity.
+3. **Inventory:** inspect location-specific stock, reserved and quarantined quantities, and movement history.
+4. **Transfers:** create a draft, dispatch from the origin, then confirm receipt into the destination.
+5. **Stock counts:** enter a blind physical count → review variance → confirm adjustment.
+6. **Catalogue:** register a new SKU, unit, category, tracking and barcode.
+7. **Replenishment:** review lead-time thresholds, then create a purchase request draft.
+8. **Reports:** inspect movement, valuation and purchase records and download CSV.
+
+**All demonstration changes remain in the visitor's browser.** No live inventory, accounts, payments, approvals or supplier orders are created. Clearing site storage resets them.
+
+## Run tests
 
 ```bash
-cd ~/Downloads/PRIME-Team-Review-Frontend
+node --check app.js
+node --check data.js
+node --check pim.js
+node tests/qa.mjs
+node tests/interactions.mjs
+node tests/pim.mjs
+node tests/pim-integration.mjs
+node tests/pim-workflows.mjs
+```
+
+## Publish to GitHub Pages
+
+On a Mac signed in to GitHub with write access to `BankMoney24/Prime-UI`:
+
+```bash
+cd ~/Downloads/PRIME-PIM-Deep-Overhaul
 bash deploy-to-github.sh
 ```
 
-The script checks the frontend, clones the latest `main` branch, updates only the web preview files, commits and pushes. It does not reset repository history, force-push or rely on a preexisting `.git` directory or `.gitignore` file. It can be rerun if the website needs updating.
+The script clones the latest `main`, copies the website, creates a commit only if files changed, and pushes without `--force`. If GitHub rejects the push, sign into an account with repository write permission. The ChatGPT connector currently has read-only access.
 
-In the GitHub repository's **Settings → Pages**, select **Deploy from a branch → main → / (root)**. GitHub Pages then serves the website at the address displayed in Settings → Pages (normally `https://bankmoney24.github.io/Prime-UI/`). Confirm the published address before sharing it.
+Enable Pages once under repository **Settings → Pages → Deploy from a branch → main → /(root)**. The expected URL is `https://bankmoney24.github.io/Prime-UI/`; confirm it in Pages settings.
 
-The connected ChatGPT GitHub account may have read-only access. If so, push through your own authenticated Mac Terminal or give the connector write access.
+## Source map
 
-## What's inside
+- `index.html` — app entry.
+- `app.js`, `data.js`, `styles.css` — original shared shell and RIM/TIM frontend.
+- `pim.js` — dedicated PIM inventory workflow model, page renderers, transitions and validation.
+- `pim.css` — PIM page, table, dashboard, mobile and form design styles.
+- `assets/prime-mark.svg` — logo.
+- `tests/` — shared and PIM QA tests.
+- `docs/PIM-INVENTORY-RESEARCH.md` — external research and implementation mapping.
+- `docs/PIM-QA-REPORT.md` — QA scope, verified tests and browser-testing limitations.
 
-- `index.html` — accessible app entry and metadata.
-- `styles.css` — PRIME design tokens, responsive desktop and mobile UI, tables, modals, dashboard, focus states and navigation.
-- `data.js` — fictional but domain-specific module schemas and sample records.
-- `app.js` — shared shell, hash routing, PIM/RIM/TIM modules, search, Scan fallback, local forms, reviews and demo flows.
-- `assets/prime-mark.svg` — PRIME logo.
-- `tests/qa.mjs` and `tests/interactions.mjs` — Node tests of routes, screen rendering, sample schema and interactions.
-- `docs/` — UX coverage, product decisions and a team review guide.
-- `deploy-to-github.sh` — safe publishing script.
-
-## Interaction guide
-
-1. Switch between PIM, RIM and TIM from the product switcher.
-2. Use the sidebar for common work; choose **All modules** for everything else.
-3. Use **Quick actions** at the top of each dashboard.
-4. Search by module, item name or ID. The Scan button allows manual lookup and camera scanning when the browser supports it.
-5. Open record rows to inspect details. Demonstration forms create browser-local drafts.
-6. RIM Point of Sale builds a local cart and simulates a sale without charging money.
-7. Open **Team feedback** from Explore more or Help. Team members can share their comments centrally through [GitHub Issues](https://github.com/BankMoney24/Prime-UI/issues) if they have GitHub accounts.
-
-## What this is not
-
-This is a **frontend demonstration**. It does not perform production authentication, payments, approvals, inventory transfers, supplier procurement, shared messaging or persistent multi-user review. Example records, people and metrics are fictional. Drafts and comments stay in local browser storage, not a shared server. No production PHP files or databases are bundled in the website.
-
-When integrating these frontend components into the actual PRIME PHP backend, retain its existing authentication, tenancy, role checks, transactions, CSRF protection, routes and audit behavior. The public website is not a replacement for those controls.
-
-The frontend was based on the source implementation and previously supplied UI screenshots. It was not derived from the later PDF wireframes.
+This is not a substitute for the real PRIME PHP backend. Do not deploy browser-local demonstration logic as a production source of truth.
