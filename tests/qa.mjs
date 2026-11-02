@@ -45,7 +45,7 @@ test('Top navigation includes scan and excludes Help icon',()=>{
  let html=set('PIM','dashboard');let a=html.indexOf('<header class="topbar">'),b=html.indexOf('</header>',a);let h=html.slice(a,b);assert.ok(h.includes('Scan'));assert.ok(h.includes('Chat'));assert.ok(h.includes('Notifications'));assert.ok(!h.includes('title="Help"'));
 });
 test('Correct quick action labels preserved',()=>{
- const html=set('PIM','dashboard');assert.ok(html.includes('Ask to Buy'));assert.ok(html.includes('Receive Delivery'));
+ const html=set('PIM','dashboard');assert.ok(html.includes('Request stock'));assert.ok(html.includes('Request purchase'));assert.ok(html.includes('Receive stock'));
 });
 test('Tabs, searchable table and export render on module pages',()=>{
  const html=set('PIM','inventory');assert.ok(html.includes('data-tab="Movements"'));assert.ok(html.includes('module-filter'));assert.ok(html.includes('data-action="export"'));

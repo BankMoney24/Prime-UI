@@ -39,3 +39,46 @@ button,input,select,textarea{font:inherit}button{color:inherit;cursor:pointer}bu
 
 /* Mobile touch targets and text readability */
 @media(max-width:700px){.btn,.top-icon,.scan-segment,.pagination,.filter-select select,.product-choice,.nav-link,.all-modules-link,.tabs>button{min-height:44px}.modal label input,.modal label select,.form-page label input,.form-page label select{min-height:44px}.attention-list>button,.compact-list button{min-height:48px}.mobile-bottom button{min-height:54px}}
+
+/* PRIME notification centre — clear status, product context and responsive review. */
+.top-actions .notify-count{position:absolute;right:0;top:0;min-width:18px;height:18px;padding:0 4px;border:2px solid white;border-radius:12px;display:grid;place-items:center;background:#db3450;color:#fff;font-size:10px;line-height:1;font-weight:800;box-shadow:0 2px 7px #7b213522}
+.notifications.notif-center{padding:0;border-radius:17px;overflow:hidden}
+.notif-top{padding:21px 23px 16px;border-bottom:1px solid var(--edge);display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
+.notif-top h2{font-size:21px;letter-spacing:-.02em;margin:4px 0 0;display:flex;align-items:center;gap:10px}
+.notif-total{display:inline-flex;align-items:center;font-size:11px;font-weight:700;color:#2757a2;background:#eef4ff;border-radius:999px;padding:5px 10px;white-space:nowrap;letter-spacing:0}
+.notif-top .btn{display:inline-flex;align-items:center;gap:7px;white-space:nowrap}
+.notif-controls{display:flex;align-items:center;justify-content:space-between;gap:15px;flex-wrap:wrap;padding:12px 23px;background:#f9fbff;border-bottom:1px solid #e9eff5}
+.notif-tabs{display:flex;align-items:center;gap:5px;flex-wrap:wrap}
+.notif-tabs button{min-height:39px;padding:8px 13px;border:1px solid transparent;border-radius:9px;font-size:12px;font-weight:720;color:#5e728c;background:transparent}
+.notif-tabs button:hover{background:#edf3fc}
+.notif-tabs button.active{background:#e4efff;color:#1a5ab5;border-color:#c7defb}
+.notif-tabs button span{padding:2px 6px;background:#fddfe4;border-radius:12px;color:#a12743;font-size:10px;margin-left:4px}
+.notif-product-filter{font-size:11px;font-weight:700;color:#607488;display:flex;align-items:center;gap:8px}
+.notif-product-filter select{padding:8px 11px;min-height:39px;border:1px solid #d5e1ef;background:#fff;border-radius:8px;color:#2b4569;font-size:12px;cursor:pointer}
+.notif-section h3{font-size:11px;letter-spacing:.045em;text-transform:uppercase;color:#698198;background:#fff;margin:0;padding:14px 23px 7px;display:flex;align-items:center;gap:8px}
+.notif-section h3 span{display:grid;place-items:center;background:#edf3fb;color:#54719a;width:19px;height:19px;border-radius:10px;font-size:10px}
+.notif-center .notif-list{padding:0 15px}
+.notif-center .notification.notif-row{display:flex;gap:13px;align-items:center;width:100%;padding:17px 10px;min-height:92px;border-bottom:1px solid #edf1f6;border-radius:7px;opacity:1}
+.notif-center .notification.notif-row:last-child{border-bottom:0}
+.notif-center .notification.notif-row.unread{background:#f6faff}
+.notif-center .notification.notif-row:hover{background:#edf5ff}
+.notif-center .notification-icon{flex:0 0 40px;width:40px;height:40px;border-radius:12px;background:#eaf1ff;color:#2860c6;display:grid;place-items:center}
+.notif-center .notif-type-warning{background:#fff0dc;color:#a96514}
+.notif-center .notif-type-success{background:#e8f9f2;color:#117f5c}
+.notif-center .notif-type-delivery{background:#e9f1ff;color:#2457b9}
+.notif-center .notif-type-approval{background:#eee9ff;color:#6e48aa}
+.notif-center .notif-text{flex:1;min-width:0}
+.notif-center .notif-title-line{display:flex;align-items:center;flex-wrap:wrap;gap:9px}
+.notif-center .notif-title-line strong{font-size:13px;font-weight:740;color:#223f5b;line-height:1.35}
+.notif-center .notif-new{font-size:9px;background:#ddecff;color:#1d59b6;border-radius:4px;padding:3px 5px;font-weight:800;text-transform:uppercase;letter-spacing:.02em}
+.notif-center .notif-description{display:block;color:#637c91;font-size:12px;line-height:1.45;margin:5px 0}
+.notif-center .notif-text small{font-size:10px;color:#8193a6}
+.notif-center .edition-tag{display:inline-block;font-size:10px;font-weight:800;color:#285ec4;background:#e4efff;border-radius:4px;padding:2px 6px}
+.notif-center .edition-tag.rim{color:#94394d;background:#ffecf1}
+.notif-center .edition-tag.tim{color:#0e765e;background:#e3f7ed}
+.notif-center .notif-row-end{display:flex;align-items:center;gap:7px;color:#245dba;font-size:11px;font-weight:730;flex:none;white-space:nowrap}
+.notif-center .notif-disclaimer{margin:0;padding:14px 23px;border-top:1px solid #e9eff5;font-size:10px;color:#71869b}
+.notif-empty{min-height:200px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:10px;padding:25px;color:#6a849d;text-align:center}
+.notif-empty strong{color:#2e506b}
+.notif-empty p{font-size:12px;margin:0}
+@media(max-width:700px){.notif-top{padding:16px 14px;align-items:flex-start}.notif-top h2{font-size:18px}.notif-controls{padding:10px 14px;gap:9px}.notif-tabs button{padding:8px 10px;font-size:11px}.notif-product-filter{margin-left:0}.notif-section h3{padding:13px 15px 7px}.notif-center .notif-list{padding:0 8px}.notif-center .notification.notif-row{gap:10px;padding:13px 7px;align-items:flex-start}.notif-center .notification-icon{flex:0 0 34px;width:34px;height:34px}.notif-center .notif-title-line strong{font-size:12px}.notif-center .notif-description{font-size:11px}.notif-center .notif-row-end{align-self:center;gap:1px;font-size:0}.notif-center .notif-row-end svg{width:15px}.notif-center .notif-disclaimer{padding:11px 15px}.notif-top .btn{min-height:37px;font-size:11px}}

@@ -19,7 +19,7 @@ let total=0;
 function check(label,fn){fn();total++;console.log('PASS',label)}
 function show(ed,page){vm.runInContext(`S.edition=${JSON.stringify(ed)};S.page=${JSON.stringify(page)};S.modal=null;render()`,ctx);return app.innerHTML}
 check('PIM dashboard renders working quick actions, current counts and warehouse checks',()=>{
- const html=show('PIM','dashboard');assert.ok(html.includes('pim-dashboard'));assert.ok(html.includes('Ask to Buy'));assert.ok(html.includes('Receive Delivery'));assert.ok(html.includes('Needs your attention'));assert.ok(html.includes('Stock watch'));assert.ok(!html.includes('All actions'));
+ const html=show('PIM','dashboard');assert.ok(html.includes('pim-dashboard'));assert.ok(html.includes('Request purchase'));assert.ok(html.includes('Receive stock'));assert.ok(html.includes('Needs your attention'));assert.ok(html.includes('Low stock'));assert.ok(!html.includes('All actions'));
 });
 check('All PIM module routes render original source-specific data and contextual tabs',()=>{
  for(const m of data.MODULES.PIM){const html=show('PIM',m.id);assert.ok(html.includes('pim-workspace'),m.id);assert.ok(html.includes('pim-panel'),m.id);assert.ok(html.includes('data-pim-action="tab"'),m.id);assert.ok(html.includes('data-pim-action="detail"')||m.id==='field' || m.id==='imports',m.id)}

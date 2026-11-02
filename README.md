@@ -64,3 +64,47 @@ Enable Pages once under repository **Settings → Pages → Deploy from a branch
 - `docs/PIM-QA-REPORT.md` — QA scope, verified tests and browser-testing limitations.
 
 This is not a substitute for the real PRIME PHP backend. Do not deploy browser-local demonstration logic as a production source of truth.
+
+
+## Packaging correction
+
+This fixed package includes `assets/prime-mark.svg`. The deployment script
+also preserves the existing GitHub logo if the local logo is missing, so a
+packaging omission cannot stop an otherwise valid deployment.
+
+From this folder, run `bash deploy-to-github.sh`. The script clones the current
+`main`, runs all Node QA checks, and pushes only if files changed. It never
+force-pushes and needs GitHub write permission.
+
+## Dashboard and notifications refinement — 2 November 2026
+
+The PIM Dashboard now follows the team's compact mobile reference:
+
+- Four outlined, icon-matched Quick Actions: **Request stock**, **Request purchase**, **Receive stock**, **Add item**. Actions open the existing PIM forms.
+- Each actionable request row has **View** beside its details. It opens that specific record, not a generic module.
+- **View all** appears on Needs your attention, Low stock, My requests and Analytics, and on the expanded secondary cards. Low stock opens its dedicated replenishment tab. My requests opens its own filtered tab.
+- **Analytics** shows live calculated demonstration values, with **Today**, **This week**, **This month** and **Annually** options. No decorative bar charts.
+- **Recent stock movements**, **Workspace setup**, **Inventory settings**, and **Stock health** are collapsed by default. A chevron expands each panel with proper `aria-expanded` state.
+- **Notifications** have product filters, All/Unread/Read tabs, grouped items, concise summaries, record navigation, unread badges and Mark all as read. The count in the header reflects the same read state.
+- Fixed a pre-existing recursive rendering issue when opening a PIM record detail.
+
+All business actions remain browser-local demonstration flows. The source of truth for the production PHP ERP is unchanged.
+
+### Quality checks
+
+```bash
+node --check app.js
+node --check data.js
+node --check pim.js
+for test in tests/*.mjs; do node "$test"; done
+```
+
+A separate browser-based smoke test of the assembled frontend passed 30 interaction and viewport checks across 1440, 768, 390 and 360 px.
+
+### Safe publish
+
+```bash
+bash deploy-to-github.sh
+```
+
+The deployment script clones the current `main`, runs tests and pushes a new commit without force-pushing. It requires write access to `BankMoney24/Prime-UI`.

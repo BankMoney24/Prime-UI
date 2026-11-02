@@ -4,7 +4,7 @@ export const USER_NAME = 'Demo Owner';
 export const ED = {
   PIM: {
     name:'Product Inventory Management',short:'Product inventory',tagline:'Materials, stock and asset accountability',
-    actions:[['Create request','requests'],['Ask to Buy','purchasing'],['Receive Delivery','purchasing'],['Add item','catalogue']],
+    actions:[['Request stock','requests'],['Request purchase','purchasing'],['Receive stock','inventory'],['Add item','catalogue']],
     kpis:[['Pending approvals','5','2 due today','approvals'],['Available stock lines','128','Across 4 locations','inventory'],['Requests to issue','3','1 awaiting allocation','requests'],['Low-stock items','8','Review replenishment','inventory']],
     focus:[['Approve REQ-0042','Safety helmets · Engineering','approvals','Due today'],['Issue REQ-0043','Electrical cable · Central store','requests','Ready'],['Review low stock','Work gloves · 18 pairs available','inventory','Low stock']],
     activity:[['Request REQ-0042 submitted','10:42','requests'],['Stock received at Central store','10:30','inventory'],['Asset return confirmed','09:15','assets']]
