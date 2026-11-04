@@ -217,3 +217,16 @@
 .pim-dashboard .pim-dash-fold-head .pim-fold-icon{width:34px;height:34px;flex:0 0 34px;display:grid;place-items:center;background:#eff5ff;color:#225fcc;border:0;border-radius:10px}
 .pim-dashboard .pim-dash-fold-head .pim-fold-title strong{display:block;overflow:visible;white-space:normal;font-size:14px;line-height:1.4}
 .pim-dashboard .pim-dash-fold-head .pim-fold-chevron{width:34px;height:34px;flex:0 0 34px}
+
+/* 2026-11-04 consistent summary rows and compact subscription */
+.pim-dashboard .pim-attention-row .pim-dash-row-title{display:block}
+.pim-dashboard .pim-attention-row .pim-dash-row-end{align-self:center;align-items:flex-end;min-width:106px;gap:3px}
+.pim-dashboard .pim-attention-row .pim-status{max-width:170px;text-align:center;white-space:normal}
+.pim-dashboard .pim-dash-row-end .pim-dash-inline-action{justify-content:flex-end}
+.pim-dash-subscription{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:14px 20px;border:1px solid #dbe6f4;border-radius:14px;background:linear-gradient(100deg,#f0f6ff,#fff);margin:4px 0 18px}
+.pim-dash-subscription>div{display:flex;flex-direction:column;gap:4px;min-width:0}
+.pim-billing-eyebrow{font-weight:750;color:#496e9b;font-size:10px;letter-spacing:.1em}
+.pim-dash-subscription strong{font-size:14px;color:#173e73}
+.pim-dash-subscription small{color:#73869c;font-size:11px}
+.pim-billing-active{font-size:10px;color:#087b51;background:#def6e8;padding:4px 8px;border-radius:100px;margin-left:8px;vertical-align:middle}
+@media(max-width:580px){.pim-dash-subscription{padding:13px;gap:8px}.pim-dash-subscription strong{font-size:12px}.pim-dash-subscription .pim-dash-view-all{font-size:11px}}

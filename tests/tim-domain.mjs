@@ -1,0 +1,24 @@
+import fs from 'node:fs';
+import vm from 'node:vm';
+import assert from 'node:assert/strict';
+const storage={};
+const localStorage={getItem:key=>storage[key]||null,setItem:(key,v)=>storage[key]=v};
+const window={};
+const context=vm.createContext({window,localStorage,Date,Intl,JSON,Number,Math,String,Array,Object,console});
+vm.runInContext(fs.readFileSync(new URL('../tim.js',import.meta.url),'utf8'),context);
+const t=window.PrimeTIM;
+let passed=0;
+function test(label,fn){fn();passed++;console.log('PASS',label)}
+test('TIM dashboard has actions, safety KPIs and analytics without bar charts',()=>{let s=t.dashboard();for(let x of ['Quick actions','Needs your attention','Tool availability','My tool requests','Analytics','Today','Weekly','Monthly','Annually','View all'])assert.ok(s.includes(x),x);assert.ok(!s.includes('canvas>'));});
+test('TIM tools page offers readable list and record detail controls',()=>{let s=t.page('tools');assert.ok(s.includes('Cordless drill'));assert.ok(s.includes('Torque wrench'));assert.ok(s.includes('data-tim="detail"'));assert.ok(s.includes('tim-mobile-rows'));});
+test('Tool issue blocks expired calibration',()=>{let x=t.inventory.issue('TL-002','Ade Bello','2027-12-01');assert.equal(x.ok,false);});
+test('Tool issue blocks failed inspections',()=>{let x=t.inventory.issue('TL-004','Ade Bello','2027-12-01');assert.equal(x.ok,false);});
+test('Tool issue requires custodian and valid return date',()=>{let x=t.inventory.issue('TL-001','','2027-12-01');assert.equal(x.ok,false);});
+test('Available tool can be issued and duplicate issue refused',()=>{let x=t.inventory.issue('TL-001','Ada Okafor','2027-12-01');assert.equal(x.ok,true);assert.equal(t.inventory.tool('TL-001').status,'Issued');assert.equal(t.inventory.issue('TL-001','Joe','2027-12-01').ok,false);});
+test('Good return releases tool',()=>{let i=t.inventory.snapshot().issues.find(i=>i.tool==='TL-001');assert.ok(i);assert.equal(t.inventory.returnTool(i.id,'Good').ok,true);assert.equal(t.inventory.tool('TL-001').status,'Available');});
+test('Failed inspection blocks available tool',()=>{assert.equal(t.inventory.inspect('TL-001','Failed','Broken housing').ok,true);assert.equal(t.inventory.tool('TL-001').status,'Blocked');assert.equal(t.inventory.issue('TL-001','Ada Okafor','2027-12-01').ok,false)});
+test('Passed reinspection releases tool without other restrictions',()=>{assert.equal(t.inventory.inspect('TL-001','Passed','Repaired').ok,true);assert.equal(t.inventory.tool('TL-001').status,'Available');});
+test('Valid calibration releases expired tool',()=>{assert.equal(t.inventory.calibrate('TL-002','2028-06-01','Metro Labs').ok,true);assert.equal(t.inventory.tool('TL-002').status,'Available')});
+test('Work order records technician and description',()=>{let x=t.inventory.workorder('TL-004','Sam Ade','Replace damaged strap');assert.equal(x.ok,true);assert.ok(t.inventory.snapshot().workorders.some(w=>w.tool==='TL-004'&&w.notes==='Replace damaged strap'));});
+test('Reset restores original demo data',()=>{t.reset();assert.equal(t.inventory.tool('TL-002').status,'Blocked');assert.equal(t.inventory.tool('TL-001').status,'Available')});
+console.log(`\n${passed} TIM domain tests passed.`);

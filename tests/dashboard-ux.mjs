@@ -30,7 +30,7 @@ check('Dashboard controls are chevrons with accessible expanded state',()=>{
  assert.ok(!html.includes('pim-dash-fold-head" data-pim-action="dashboard-fold" data-fold="dashSetup" aria-expanded="false"><strong'));
 });
 check('Analytics period filter uses correct options',()=>{
- const html=show('dashboard');for(const t of ['Today','This week','This month','Annually'])assert.ok(html.includes(`<option value="${t}"`),t)
+ const html=show('dashboard');for(const t of ['Today','Weekly','Monthly','Annually'])assert.ok(html.includes(`<option value="${t}"`),t)
 });
 check('Notification centre supports products and read filters',()=>{
  const html=show('notifications');assert.ok(html.includes('data-action="notif-filter"'));assert.ok(html.includes('data-change="notif-product"'));assert.ok(html.includes('Mark all as read'));assert.ok(html.includes('7 unread'));
