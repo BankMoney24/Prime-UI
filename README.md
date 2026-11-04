@@ -1,71 +1,51 @@
-# PRIME — PIM and TIM Frontend Update
+# PRIME — PIM, RIM and TIM Industrial Edition
 
-A team-review frontend for **PRIME** with Product Inventory Management (PIM), Retail Inventory Management (RIM), and Tool Inventory Management (TIM).
+Interactive, standalone frontend for PRIME. **PIM and RIM remain available.** The TIM industrial workspace extends the original aviation Tool Control demo to eleven configurable sectors.
 
-This is a public interactive demonstration. All figures, employee names, approvals, stock figures, tool records, plan details and transactions are sample data. The browser-local workflow engines are **not** the production inventory ledger.
+## TIM industry profiles
 
-## What changed
+Aviation MRO, maritime and shipbuilding, steel and fabrication, oil and gas, construction, manufacturing and automotive, energy and utilities, mining, rail, ports/logistics and aerospace manufacturing. Each profile has separate demo records, terminology, tools, sites, job references and policy hints.
 
-### PIM dashboard
+## TIM interactive workflows
 
-- **Needs your attention:** Request status sits in the right-hand action column, above **View**, matching the Low Stock and My Requests rows. Item name, request reference, quantity and requester stay together on the left.
-- **Analytics period:** Today, Weekly, Monthly, Annually.
-- **Billing:** Added a compact PIM plan and billing card, linking to the existing Billing & plans view.
-- Preserved quick actions, low-stock View all, request View all, stock summaries and collapsible panels.
+- Tools & equipment: unique serial, QR/RFID label, custody, condition, inspection, certification, calibration, service.
+- Toolboxes & shadow boards: reconciliation of each expected tool before issue and return, blocking missing items. Toolbox templates are separate from physical assets.
+- Requests, approvals, issue & return: named recipient, category authorisation, scan validation, two handover acknowledgements, return reconciliation.
+- Custody transfers, inspections, surprise checks, calibration, maintenance and work orders.
+- Sector-specific request validation: oil/gas, utilities and rail demo policies require a work permit or track possession reference before issue.
+- Exceptions: missing/damaged tools, investigations, comments, disposition, and controlled reinspection.
+- **New — workpack closeout:** checks outstanding issues, unresolved exceptions and readiness. Requires evidence, four sector-aware checklist items and two distinct reviewer confirmations. Does **not** grant any regulatory release-to-service.
+- **New — lifting & critical gear:** SWL placeholders, certificate expiry, inspection status and blocked issue indications. SWL values are illustrative and **must not be used for lifting**.
+- Offline mode queues requests locally; review is required before any eventual sync. The demo never sends records to a server.
+- Sector switching, role-based demo controls, audit timeline, CSV export and manual scan.
 
-### TIM tool management
-
-- New TIM dashboard with quick actions, tool availability, urgency summaries, overdue returns, analytics, compact plan information and expandable sections.
-- Domain-specific pages for **Tools & equipment**, **Tool store**, **Issue & return**, **Custody & assignments**, **Inspections**, **Calibration**, **Maintenance** and **Work orders**. Other TIM modules continue to use the existing PRIME shared page components.
-- Tool issue requires a custodian and return date. A tool with an expired calibration, failed inspection, quarantine or existing open issue cannot be issued.
-- Returns record condition. Damage quarantines a tool, and expired calibration/failed inspection prevents normal re-release.
-- Inspections record pass/fail outcomes. A failed inspection requires a reason.
-- Calibration records can release a tool once the tool has passed inspection and has a valid certificate.
-- Work orders capture the tool, technician and work description.
-- Desktop tables become record cards on phones. List filtering, status tabs, details and local demo forms are interactive.
-
-## Preview locally
-
-From the extracted `PRIME-PIM-TIM-Updated` folder:
+### Run locally
 
 ```bash
+cd PRIME-TIM-Industry-Control-v2
 python3 -m http.server 8000
 ```
 
-Open `http://localhost:8000/#/pim/dashboard`, then switch to TIM through the product menu.
+Open http://localhost:8000/#/tim/dashboard. Use product switcher to return to PIM or RIM. For the new pages open `#/tim/workpacks`, `#/tim/lifting`, or `#/tim/toolboxes`.
 
-You can also open the accompanying standalone HTML preview without running a server.
-
-## Run QA
-
-Requires Node.js.
+### Run QA
 
 ```bash
-node --check app.js
-node --check pim.js
-node --check tim.js
-for file in tests/*.mjs; do node "$file"; done
+node --check tim-industrial-core.js
+node --check tim-industrial-ui.js
+for test in tests/*.mjs; do node "$test"; done
 ```
 
-Automated tests cover the existing shell, PIM processes and TIM operational rules. Browser-based screenshot and screen-reader testing are still needed before accepting the UI as fully reviewed.
-
-## Push to GitHub
-
-The deployment script clones the latest main branch, copies the public website files, runs syntax and unit checks, commits changes and pushes without `--force`. It preserves unrelated repository files.
+### Deploy safely to GitHub Pages
 
 ```bash
 bash deploy-to-github.sh
 ```
 
-Repository: https://github.com/BankMoney24/Prime-UI
+The deployment script clones the live branch, preserves remote history, checks all source and test files, and publishes without force-pushing. It requires your Git credentials to have write access to BankMoney24/Prime-UI. URL (after successful push and Pages deployment): https://bankmoney24.github.io/Prime-UI/.
 
-Expected GitHub Pages address (when enabled): https://bankmoney24.github.io/Prime-UI/
+### Boundaries
 
-Use a GitHub account authorised to push to `BankMoney24/Prime-UI`. The connected ChatGPT GitHub account has read-only access and did not publish this update.
+This is an interactive UI demonstration, **not** the production PHP backend or a certified aviation, maritime, lifting or industrial safety system. Role switches, signatures, offline queues, audit hashes, dates and sample SWL numbers are simulated in localStorage. It does not issue aircraft Certificates of Release to Service or legal lifting examination certificates. Actual use requires server authentication, robust event history, protected sign-offs, approved procedures, local regulatory review, and physical evidence capture.
 
-## Important boundaries
-
-- No production API/database integration, real authentication, payments, true role-based access control or multi-user data synchronisation.
-- PIM and TIM demo state is stored separately in each visitor's browser.
-- RIM remains available and unchanged, apart from the necessary shared-shell TIM integration.
-- Backend acceptance tests and permission checks must be carried out when connecting the workflows to the existing PHP application.
+Read `docs/TIM-INDUSTRY-CONTROL.md` for source feature mapping, reference standards and test coverage. The original uploaded demo remains a reference; its source is not redistributed here.

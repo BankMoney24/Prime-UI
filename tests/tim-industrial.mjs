@@ -1,0 +1,32 @@
+import fs from 'node:fs';
+import vm from 'node:vm';
+import assert from 'node:assert/strict';
+const save={};
+const localStorage={getItem:k=>save[k]||null,setItem:(k,v)=>save[k]=v};
+const window={};
+const ctx=vm.createContext({window,localStorage,Date,Intl,JSON,Math,Number,String,Array,Object,console});
+vm.runInContext(fs.readFileSync(new URL('../tim-industrial-core.js',import.meta.url),'utf8'),ctx);
+const E=window.PrimeTIMIndustrialEngine;
+assert.ok(E);
+let passes=0;
+function test(title,fn){try{fn();passes++;console.log('PASS',title)}catch(error){console.error('FAIL',title);throw error}}
+const sample=()=>E.state();
+test('Eleven distinct industrial profiles available',()=>assert.equal(Object.keys(E.INDUSTRIES).length,11));
+test('Every industrial pack defines sites, references, controls and representative tools',()=>{for(const [id,pack] of Object.entries(E.INDUSTRIES)){assert.ok(pack.name&&pack.sites.length>=3&&pack.refs.length>=1&&pack.policy.length>=4,id);assert.equal(pack.tools.length,8,id)}});
+test('Aviation includes traceability, auth and full-kit reconciliation',()=>{assert.equal(E.active(),'aviation');assert.ok(E.profile().policy.some(s=>s.includes('Aircraft')));let kit=sample().kits[0];let result=E.reportScan(kit.id,[], 'eng1');assert.ok(result.missing.length===3);assert.equal(result.ok,false)});
+test('Ready kit scans validate and allow issue',()=>{let p=sample(),k=p.kits[0],r=p.requests[0];let scan=E.reportScan(k.id,k.toolIds,'eng1');assert.equal(scan.ok,true,JSON.stringify(scan));const x=E.issueKit({requestId:r.id,codes:k.toolIds.join(','),storesSignature:'Storekeeper Demo',receiverSignature:'Aisha Demo'});assert.equal(x.ok,true,x.error);assert.equal(E.getKit(k.id).status,'Issued');assert.equal(E.getTool(k.toolIds[0]).holder,'eng1')});
+test('Incomplete return blocks and opens missing tool exception',()=>{let p=sample(),issue=p.issues[0],kit=E.getKit(issue.kitId);let ret=E.receiveKit({issueId:issue.id,codes:kit.toolIds.slice(0,1),storesSignature:'S',receiverSignature:'A'});assert.equal(ret.ok,false);assert.equal(p.issues.find(x=>x.id===issue.id).status,'Return blocked');assert.ok(p.exceptions.some(x=>x.type==='Missing tool'&&x.status==='Open'))});
+test('Properly rescanned return closes issue and linked missing case',()=>{let p=sample(),issue=p.issues[0],k=E.getKit(issue.kitId);let ret=E.receiveKit({issueId:issue.id,codes:k.toolIds.join(','),storesSignature:'Stores',receiverSignature:'Aisha',condition:'Serviceable'});assert.equal(ret.ok,true,ret.error);assert.equal(issue.status,'Returned');assert.ok(!p.exceptions.some(x=>x.kitId===k.id&&x.type==='Missing tool'&&x.status==='Open'))});
+test('Expired calibration, failed inspection and expired certificate block issue',()=>{let k=sample().kits[1],r=sample().requests[1];E.approveRequest(r.id,'Approved','');let res=E.issueKit({requestId:r.id,codes:k.toolIds,storesSignature:'Stores',receiverSignature:'Tunde'});assert.equal(res.ok,false);assert.ok(/blocked/i.test(res.error))});
+test('Recipient without relevant authorisation cannot receive tool',()=>{let t=sample().tools[0];let b=E.toolBlocks(t,'eng3');assert.ok(b.some(s=>s.includes('authorisation expired')))});
+test('Two confirmation fields are mandatory for custody transfer',()=>{let t=sample().tools[0];assert.equal(E.transferTool({toolId:t.id,toPersonId:'eng1',fromSignature:'',toSignature:'Aisha',workRef:'Job 1'}).ok,false);assert.equal(E.transferTool({toolId:t.id,toPersonId:'eng1',fromSignature:'Stores',toSignature:'Aisha',workRef:'Job 1'}).ok,true)});
+test('Role permissions are enforced in demo',()=>{E.setRole('Viewer');assert.equal(E.requestKit({kitId:sample().kits[0].id,personId:'eng1',assetRef:'Task',due:E.iso(7)}).ok,false);E.setRole('Admin')});
+test('Failed inspection opens an exception and quarantines tool',()=>{let t=sample().tools[0];const r=E.inspectTool({toolId:t.id,result:'Failed',notes:'Handle fractured'});assert.equal(r.ok,true,r.error);assert.ok(E.toolBlocks(t).some(x=>/condition/i.test(x)));assert.ok(sample().exceptions.some(x=>x.type==='Failed inspection'))});
+test('Calibration requires future expiry, provider and certificate',()=>{let t=sample().tools[3];assert.equal(E.recordCalibration({toolId:t.id,provider:'Metro',certificate:'',standard:'ISO',nextDue:E.iso(30)}).ok,false);let r=E.recordCalibration({toolId:t.id,provider:'Metro',certificate:'CERT-001',standard:'ISO 10012:2026',nextDue:E.iso(100)});assert.equal(r.ok,true,r.error);assert.equal(t.calibrationRef,'CERT-001')});
+test('Surprise toolbox inspection reports missing scans',()=>{let k=sample().kits[1];let r=E.surpriseInspection(k.id,k.toolIds.slice(1));assert.equal(r.ok,false);assert.ok(sample().exceptions.some(x=>x.type==='Surprise inspection discrepancy'))});
+test('Work order uses parts and completion evidence',()=>{let t=sample().tools[0];let w=E.openWorkOrder({toolId:t.id,assignedTo:'Tech',description:'Inspect and repair'});assert.equal(w.ok,true);let denied=E.closeWorkOrder({id:w.workorder.id,evidence:''});assert.equal(denied.ok,false);let done=E.closeWorkOrder({id:w.workorder.id,evidence:'Inspected and repaired',hours:2,partId:sample().parts[0].id,partQty:2});assert.equal(done.ok,true,done.error);assert.equal(w.workorder.status,'Completed')});
+test('Audit chain verification catches edited event',()=>{assert.equal(E.auditVerify(),true);let event=sample().audit[3];let old=event.summary;event.summary='Changed deliberately';assert.equal(E.auditVerify(),false);event.summary=old;assert.equal(E.auditVerify(),true)});
+test('Offline actions are queued and never silently marked synced',()=>{E.setOnline(false);let r=E.requestKit({kitId:sample().kits[0].id,personId:'eng1',assetRef:'Job-9',due:E.iso(10)});assert.equal(r.ok,true);assert.equal(r.queued,true);assert.equal(sample().offlineQueue[0].status,'Pending sync');E.setOnline(true);let z=E.syncOffline();assert.equal(z.ok,true);assert.equal(sample().offlineQueue[0].status,'Review required')});
+test('Every industrial profile owns separate state',()=>{for(let id of Object.keys(E.INDUSTRIES)){let r=E.selectIndustry(id);assert.equal(r.ok,true);assert.equal(E.state().tools.length,8);assert.equal(E.profile().name,E.INDUSTRIES[id].name)}E.selectIndustry('aviation');assert.ok(sample().issues.some(x=>x.status==='Returned'))});
+test('CSV export and reset work',()=>{assert.ok(E.exportRows('tools').includes('serial'));assert.equal(E.reset().ok,true);assert.equal(E.state().requests[0].status,'Approved')});
+console.log(`\n${passes} industrial domain tests passed.`)
