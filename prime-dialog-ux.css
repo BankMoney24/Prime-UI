@@ -1,0 +1,89 @@
+/* PRIME UI v2: shared dialog, record-drawer and field treatment.
+   Inspired by the supplied tool-control demo's clear header/body/footer layout.
+   Existing domain validation and actions remain owned by PIM/TIM controllers. */
+:root{--dialog-ink:#183554;--dialog-muted:#657e98;--dialog-stroke:#dbe6f2;--dialog-primary:#2563eb;--dialog-bg:#fff;--dialog-surface:#f7faff}
+body.prime-modal-open{overflow:hidden}
+.pim-overlay,.itim-modal-backdrop,.tim-backdrop{background:rgba(14,29,52,.54)!important;backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);overscroll-behavior:contain}
+.pim-form-dialog,.itim-modal:not(.itim-detail-drawer),.tim-modal{color:var(--dialog-ink);border:1px solid rgba(210,226,242,.95);box-shadow:0 30px 95px rgba(9,32,66,.32)!important;background:#fff;max-width:min(740px,calc(100vw - 28px));border-radius:18px;min-width:0}
+.pim-form-dialog,.itim-modal:not(.itim-detail-drawer){display:flex;flex-direction:column;max-height:min(89dvh,880px);overflow:hidden}
+.pim-form-dialog .pim-drawer-head,.itim-modal-top{position:relative;display:flex;align-items:flex-start;justify-content:space-between;gap:16px;background:#fff;padding:19px 24px 17px;border-bottom:1px solid var(--dialog-stroke);flex-shrink:0}
+.pim-form-dialog .pim-drawer-head small,.itim-dialog-context{font-size:11px;letter-spacing:.075em;text-transform:uppercase;color:#4e72a4;font-weight:750}
+.pim-form-dialog .pim-drawer-head h2,.itim-modal-top h2{font-size:20px;letter-spacing:-.025em;line-height:1.25;font-weight:750;margin:7px 0 4px;color:#172e4b}
+.pim-modal-help,.itim-modal-subtitle{font-size:12px;color:#617890;line-height:1.45;margin:4px 0 0;max-width:56ch}
+.pim-modal-x,.itim-dialog-close{width:38px;height:38px;min-width:38px;display:grid;place-items:center;border:1px solid #e1eaf4;border-radius:10px;background:#f8fbff;color:#385c83;font-size:25px;font-weight:350;line-height:1;cursor:pointer}
+.pim-modal-x:hover,.itim-dialog-close:hover{background:#e9f2ff;color:#174eac;border-color:#bad5fb}
+.pim-modal-x:focus-visible,.itim-dialog-close:focus-visible{outline:3px solid #89b9ff;outline-offset:2px}
+.pim-workflow-form,.itim-modal-form{display:flex;flex-direction:column;min-height:0;flex:1;overflow:hidden}
+.pim-form-body{flex:1;min-height:0;overflow-y:auto;padding:20px 24px 24px;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:#8eb9ed #eaf1fb}
+.pim-form-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:15px 18px;align-items:start}
+.pim-field-label,.itim-field-caption{font-size:12px;line-height:1.35;display:inline;color:#35516d;font-weight:700}
+.pim-required,.itim-req{color:#bb3746;margin-left:2px}
+.pim-workflow-form label,.itim-field{min-width:0;align-items:stretch;gap:7px;font-size:12px}
+.pim-workflow-form input,.pim-workflow-form select,.pim-workflow-form textarea,.itim-field input,.itim-field select,.itim-field textarea{border-radius:10px;border:1px solid #cddbed;background:#fff;color:#1e3f61;min-height:44px;padding:10px 12px;font-size:13px;width:100%;min-width:0;transition:border-color .12s ease,box-shadow .12s ease}
+.pim-workflow-form input:hover,.pim-workflow-form select:hover,.itim-field input:hover,.itim-field select:hover{border-color:#9abde8}
+.pim-workflow-form input:focus-visible,.pim-workflow-form select:focus-visible,.pim-workflow-form textarea:focus-visible,.itim-field input:focus-visible,.itim-field select:focus-visible,.itim-field textarea:focus-visible{outline:2px solid #7dacf6;outline-offset:1px;box-shadow:0 0 0 4px #e9f2ff}
+.pim-workflow-form input::placeholder,.itim-field input::placeholder,.itim-field textarea::placeholder{color:#95a6b8}
+.pim-form-footer,.itim-form-footer{flex-shrink:0;position:relative;z-index:1;display:flex;align-items:center;justify-content:flex-end;gap:10px;flex-wrap:wrap;padding:15px 24px;margin:0;border-top:1px solid var(--dialog-stroke);background:#fff}
+.pim-form-footer button,.itim-form-footer button{min-height:42px;padding:10px 17px;font-size:12px;font-weight:730;border-radius:10px;white-space:normal}
+.pim-form-footer .pim-btn:not(.pim-btn-soft),.itim-form-footer .itim-btn.primary{background:var(--dialog-primary);border-color:var(--dialog-primary);color:#fff}
+.pim-form-footer .pim-btn:not(.pim-btn-soft):hover,.itim-form-footer .itim-btn.primary:hover{background:#1b51c5;border-color:#1b51c5}
+.pim-form-error:not([hidden]),.itim-error:not(:empty){display:block;border-radius:10px;padding:11px 14px;margin:16px 0 0;background:#fff2f1;color:#ad3037;border:1px solid #f5c5c4;font-size:12px;line-height:1.5;font-weight:600}
+.pim-form-error:focus-visible,.itim-error:focus-visible{outline:2px solid #db525a;outline-offset:2px}
+.pim-steps{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 18px;padding:0 0 14px;border-bottom:1px solid #e7eef6}
+.pim-steps span{border:1px solid #e2e9f2;border-radius:8px;padding:8px 11px;font-size:11px;font-weight:680;color:#627c9a;background:#f7f9fc}
+.pim-steps span.active{border-color:#bfd4fa;background:#e9f1ff;color:#245dc5}
+.pim-inline-note,.itim-modal-verification{border:1px solid #d5e5f6;background:#f3f8ff;color:#3c6392;border-radius:10px;padding:11px 13px;line-height:1.5;font-size:12px}
+.itim-modal:not(.itim-detail-drawer){width:min(760px,calc(100vw - 28px));padding:0}
+.itim-modal-form .itim-field-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-content:start;align-items:start;gap:16px 18px;padding:21px 24px 26px;margin:0;flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:#8eb9ed #eaf1fb}
+.itim-field-grid>.itim-field:has(textarea),.itim-field-grid>.itim-checklist,.itim-field-grid>.itim-help-text,.itim-field-grid>.itim-notice{grid-column:1/-1}
+.itim-field-grid>.itim-field textarea{min-height:88px;resize:vertical}
+.itim-modal-verification{margin:0 24px 11px;padding:9px 12px;font-size:11px}
+.itim-modal-form .itim-error{margin:0 24px 12px}
+.itim-modal-form .itim-btn{width:auto;margin:0}
+.itim-checklist{margin:0;min-width:0}
+.itim-checklist input[type=checkbox]{width:18px!important;height:18px;min-height:18px!important;min-width:18px;accent-color:#2364da}
+.itim-detail-backdrop{display:flex;align-items:stretch;justify-content:flex-end;padding:0}
+.itim-modal.itim-detail-drawer{height:100dvh;max-height:none;width:min(550px,100%);max-width:100%;border-radius:17px 0 0 17px;padding:0;margin:0;background:#fff;display:flex;flex-direction:column;overflow:hidden;box-shadow:-26px 0 70px rgba(14,35,70,.25)}
+.itim-detail-content{min-height:0;flex:1;overflow-y:auto;padding:22px 24px;scrollbar-width:thin;scrollbar-color:#9bbce6 #edf3fb}
+.itim-detail-status{display:flex;align-items:center;gap:12px;flex-wrap:wrap;background:#f6f9fc;border-radius:12px;padding:12px;margin-bottom:15px;color:#607b95;font-size:12px}
+.itim-critical-note{display:flex;align-items:flex-start;gap:10px;border:1px solid #f2cfca;border-radius:11px;background:#fff5f2;padding:13px;color:#a94338}
+.itim-critical-note strong{display:block;font-size:13px}.itim-critical-note p{font-size:12px;line-height:1.55;margin-top:4px}
+.itim-safe-note{border:1px solid #ccedda;background:#f1fbf5;border-radius:11px;padding:11px 13px;font-size:12px;color:#19724c}
+.itim-detail-drawer .itim-detail-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:16px 0}
+.itim-detail-grid>div{padding:12px;border:1px solid #e3ebf5;background:#fbfcff;border-radius:10px}
+.itim-detail-grid small{font-size:11px}.itim-detail-grid strong{font-size:13px;margin-top:6px}
+.pim-drawer.prime-detail-panel{width:min(570px,100%);overflow:hidden;background:#fff}
+.pim-drawer.prime-detail-panel .pim-drawer-head{position:sticky;top:0;background:#fff;z-index:2}
+.pim-drawer.prime-detail-panel .pim-drawer-body{padding:21px 24px;min-height:0;overflow:auto}
+.pim-drawer .pim-facts{gap:11px}.pim-drawer .pim-facts>div{background:#fbfdff;border:1px solid #e5edf7;border-radius:9px;padding:12px}
+.pim-drawer .pim-facts strong{font-size:13px}
+.pim-drawer .pim-drawer-actions{margin-bottom:14px}
+.pim-drawer .pim-drawer-actions .pim-btn{min-height:42px}
+/* PIM and TIM workspaces: pages share consistent controls, empty states, and tables */
+.pim-page-heading,.itim-page-heading{padding:2px 0 4px}
+.pim-page-heading h1,.itim-page-heading h1{letter-spacing:-.035em}
+.pim-workspace .pim-tools,.itim-filter-tools{box-shadow:0 3px 13px rgba(27,57,96,.025)}
+.pim-tab,.pim-tabs button,.itim-tab,.itim-link,.pim-table-link,.itim-text-link{transition:background .12s ease,color .12s ease,border-color .12s ease}
+.pim-table-wrap,.itim-table-scroller{max-width:100%;scrollbar-width:thin;scrollbar-color:#9dbbe9 #f3f7fc}
+.pim-table tbody tr:hover td,.itim-table tbody tr:hover td{background:#f5f9ff}
+.pim-table tbody tr:focus-within td,.itim-table tbody tr:focus-within td{background:#f0f6ff}
+.pim-table th,.itim-table th{color:#456583;font-weight:760}
+.pim-btn:focus-visible,.itim-btn:focus-visible,.pim-table-link:focus-visible,.itim-text-link:focus-visible{outline:2px solid #2563eb;outline-offset:2px}
+.itim-table-footer{font-size:12px;padding:12px 10px;color:#6d849e}
+.itim-empty{padding:24px 15px;background:#fbfdff;border:1px dashed #dce8f4;border-radius:11px;line-height:1.6}
+@media(max-width:720px){
+ .pim-form-dialog,.itim-modal:not(.itim-detail-drawer){width:100%;max-width:none;max-height:min(95dvh,950px);border-radius:18px 18px 0 0;margin:auto 0 0;align-self:flex-end}
+ .pim-overlay,.itim-modal-backdrop:not(.itim-detail-backdrop){align-items:flex-end;place-items:end center;padding:0}
+ .pim-form-dialog .pim-drawer-head,.itim-modal-top{padding:16px 17px 14px}
+ .pim-form-body,.itim-modal-form .itim-field-grid{padding:17px;grid-template-columns:1fr;gap:13px}
+ .pim-form-grid{grid-template-columns:1fr;gap:13px}
+ .pim-form-footer,.itim-form-footer{padding:12px 16px calc(12px + env(safe-area-inset-bottom));gap:8px}
+ .pim-form-footer button,.itim-form-footer button{flex:1 1 auto;min-height:45px}
+ .pim-form-footer button[data-pim-action="close"]{flex:0 0 auto}
+ .itim-field-grid>.itim-field:has(textarea),.itim-field-grid>.itim-checklist,.itim-field-grid>.itim-help-text{grid-column:auto}
+ .itim-detail-drawer{width:100%!important;border-radius:0!important}
+ .pim-drawer.prime-detail-panel{width:100%}
+ .pim-modal-help,.itim-modal-subtitle{font-size:12px}
+}
+@media(max-width:390px){.pim-steps{gap:5px}.pim-steps span{padding:7px 6px;font-size:10px}.itim-form-footer .itim-btn{padding:11px}}
+@media(prefers-reduced-motion:reduce){.pim-overlay,.itim-modal-backdrop,.pim-form-dialog,.itim-modal{animation:none!important;transition:none!important}}
