@@ -123,6 +123,18 @@
     w.status='Closed (demo)';w.closed=stamp();w.controls={checks:selected,operationsSigner:text(operationsSigner),qualitySigner:text(qualitySigner),evidence:text(evidence),zeroToolDeclaration:text(zeroToolDeclaration),linkedIssues:ready.issues.map(x=>x.id),linkedExceptions:ready.exceptions.map(x=>x.id)};
     log('Workpack closeout recorded',w.id,w.assetRef+' · dual review · browser-only simulation');persist();return ok({workpack:w,message:'Demo workpack closeout recorded. This is not an operational release or regulatory sign-off.'});
   }
+  function registerTool({name,serial,category,site,notes}){
+    if(current().role!=='Admin')return fail('Only the demo administrator can register equipment.');
+    const clean=x=>String(x||'').trim();name=clean(name);serial=clean(serial);category=clean(category);site=clean(site);
+    if(name.length<3||serial.length<3)return fail('Provide a tool name and unique serial number (at least three characters).');
+    if(!INDUSTRIES[store.active].sites.includes(site))return fail('Choose an approved site for the active industry.');
+    if(!INDUSTRIES[store.active].tools.some(t=>t[1]===category))return fail('Choose an available equipment category.');
+    const p=current();if(p.tools.some(t=>String(t.serial||'').toLowerCase()===serial.toLowerCase()))return fail('This serial number is already registered in the selected industry.');
+    const id=uid(store.active.slice(0,3).toUpperCase()+'-TL');
+    const tool={id,name,serial,category,kind:'basic',qr:id,rfid:'',condition:'Quarantined',status:'Quarantined',location:site,site,holder:'',kitId:'',requiresCalibration:false,requiresCertificate:false,requiresInspection:true,lifting:category==='Lifting',hazardous:category==='Ex equipment',calibrationDue:'',inspectionDue:'',certificateDue:'',serviceDue:iso(180),warrantyDue:'',value:0,hours:0,intervalHours:300,criticality:'Controlled',special:'',manufacturer:'Not recorded',model:'Not recorded',safeWorkingLoad:'',notes:clean(notes)||'New demonstration item, pending acceptance and pre-use inspection.'};
+    p.tools.unshift(tool);log('New equipment registered',tool.id,tool.name+' · pending inspection and approval');persist();
+    return ok({tool,message:'Equipment added to the demo register in quarantine. Complete its inspection and release checks before issue.'});
+  }
   function createKitTemplate({name,site,codes,notes}){
     const denied=requirePermission('template');if(denied)return denied;
     let p=current();if(!text(name)||text(name).length<3)return fail('Enter a toolbox template name.');
@@ -143,6 +155,6 @@
   function exportRows(kind){let p=current();const arr=kind==='audit'?p.audit:kind==='exceptions'?p.exceptions:kind==='requests'?p.requests:kind==='calibration'?p.calibrations:kind==='maintenance'?p.workorders:p.tools;let cols=kind==='audit'?['at','actor','action','record','summary']:kind==='tools'?['id','name','serial','condition','status','site','holder','calibrationDue','inspectionDue','certificateDue']:Array.from(new Set(arr.flatMap(x=>Object.keys(x)).filter(x=>typeof arr.find(x=>x?.[x])!=='object'))).slice(0,14);return csv([cols,...arr.map(x=>cols.map(k=>typeof x[k]==='object'?JSON.stringify(x[k]):x[k]))]);}
   function snapshot(){return clone(store)}
   function reset(){store=seed();persist();return ok({reset:true})}
-  const api={INDUSTRIES,actions,getWorkpack,workpackReadiness,closeoutChecklist,closeWorkpack,createKitTemplate,profile:()=>INDUSTRIES[store.active],active:()=>store.active, state:()=>current(),snapshot,reset,selectIndustry,setRole,setOnline,syncOffline,permit,getTool,getKit,getPerson,getRequest,dueState,toolBlocks,reportScan,reportScanReturn,requestKit,approveRequest,issueKit,receiveKit,transferTool,inspectTool,recordCalibration,openWorkOrder,closeWorkOrder,commentException,resolveException,surpriseInspection,auditVerify,log,exportRows,iso,today,uid};
+  const api={INDUSTRIES,actions,getWorkpack,workpackReadiness,closeoutChecklist,closeWorkpack,createKitTemplate,registerTool,profile:()=>INDUSTRIES[store.active],active:()=>store.active, state:()=>current(),snapshot,reset,selectIndustry,setRole,setOnline,syncOffline,permit,getTool,getKit,getPerson,getRequest,dueState,toolBlocks,reportScan,reportScanReturn,requestKit,approveRequest,issueKit,receiveKit,transferTool,inspectTool,recordCalibration,openWorkOrder,closeWorkOrder,commentException,resolveException,surpriseInspection,auditVerify,log,exportRows,iso,today,uid};
   global.PrimeTIMIndustrialEngine=api;
 })(typeof window==='undefined'?globalThis:window);

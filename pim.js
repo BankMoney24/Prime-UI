@@ -483,5 +483,5 @@
     </div>`;
   }
   function close(ctx){if(ui.modal||ui.selected){ui.modal=null;ui.selected=null;ctx.render?.();return true}return false}
-  global.PrimePIM={version:'1.0',allowedPages,render:renderMain,dashboard:renderDashboard,click:handleClick,change:handleChange,input:handleInput,submit:handleSubmit,close,lookup:(code)=>{const q=String(code||'').toLowerCase().trim();return db.items.find(i=>[i.name,i.sku,i.barcode].some(v=>String(v||'').toLowerCase().includes(q)))||null},inventory:{snapshot:()=>deep(db),totals,available,onHand,receiveOrder,approveRequest,allocateRequest,issueRequest,dispatchTransfer,receiveTransfer,postCount},reset(){db=deep(baseline);save();ui.page='';ui.feedback='';}};
+  global.PrimePIM={version:'1.0',allowedPages,render:renderMain,dashboard:renderDashboard,renderModal:()=>ui.modal?formModal():'',click:handleClick,change:handleChange,input:handleInput,submit:handleSubmit,close,lookup:(code)=>{const q=String(code||'').toLowerCase().trim();return db.items.find(i=>[i.name,i.sku,i.barcode].some(v=>String(v||'').toLowerCase().includes(q)))||null},inventory:{snapshot:()=>deep(db),totals,available,onHand,receiveOrder,approveRequest,allocateRequest,issueRequest,dispatchTransfer,receiveTransfer,postCount},reset(){db=deep(baseline);save();ui.page='';ui.feedback='';}};
 })(typeof window!=='undefined'?window:globalThis);

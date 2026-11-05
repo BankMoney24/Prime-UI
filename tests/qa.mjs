@@ -42,7 +42,7 @@ test('Sidebar labels are compact and requests are direct',()=>{
  let html=set('PIM','dashboard');assert.ok(html.includes('All modules'));assert.ok(html.includes('>Requests<'));assert.ok(!html.includes('Create New</button>'));
 });
 test('Top navigation includes scan and excludes Help icon',()=>{
- let html=set('PIM','dashboard');let a=html.indexOf('<header class="topbar">'),b=html.indexOf('</header>',a);let h=html.slice(a,b);assert.ok(h.includes('Scan'));assert.ok(h.includes('Chat'));assert.ok(h.includes('Notifications'));assert.ok(!h.includes('title="Help"'));
+ let html=set('PIM','dashboard');let a=html.indexOf('<header class="topbar'),b=html.indexOf('</header>',a);let h=html.slice(a,b);assert.ok(h.includes('Scan'));assert.ok(h.includes('Chat'));assert.ok(h.includes('Notifications'));assert.ok(!h.includes('title="Help"'));
 });
 test('Correct quick action labels preserved',()=>{
  const html=set('PIM','dashboard');assert.ok(html.includes('Request stock'));assert.ok(html.includes('Request purchase'));assert.ok(html.includes('Receive stock'));
