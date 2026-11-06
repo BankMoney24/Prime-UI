@@ -1,4 +1,4 @@
-import {ED,PRIMARY,MODULES,SHARED,ORGANISATION,USER_NAME,getModule,allModules,isShared} from './data.js';
+import {ED,PRIMARY,MODULES,SHARED,ORGANISATION,USER_NAME,getModule,allModules,isShared,RIM_DETAIL_VIEWS} from './data.js';
 
 const root=document.getElementById('app');
 const STORE='prime-team-preview-v3';
@@ -74,15 +74,57 @@ function navigation(ed,id){S.edition=ed;S.page=id;S.pageIndex=0;S.filter='All';S
 function fromHash(){const r=parseRoute();S.edition=r.edition;S.page=r.page;S.pageIndex=0;S.activeTab='';S.filter='All';S.search='';S.detail=null;S.drawer=false;S.modal=null;S.command=false;S.allModules=false;render()}
 function fmtDate(){return new Intl.DateTimeFormat('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'}).format(new Date())}
 const badge=(value)=>{const s=String(value||'').toLowerCase();let c=/fail|overdue|expired|blocked|low stock|error|rejected|mismatch/.test(s)?'danger':/await|pending|review|draft|due|progress|scheduled|part|open|action|inspection/.test(s)?'warn':/active|ready|approved|received|paid|valid|passed|available|complete|connected|in stock|success|assigned|authorised|reconciled|issue[d]?/.test(s)?'success':'neutral';return `<span class="badge ${c}">${safe(value)}</span>`};
-const moduleFor=()=>getModule(S.edition,S.page);
+const moduleFor=()=>{const m=getModule(S.edition,S.page),view=S.edition==='RIM'?RIM_DETAIL_VIEWS[S.page]?.[S.activeTab]:null;return m&&view?{...m,columns:view.columns,rows:view.rows}:m;};
 function rimSold(sku){return (S.preferences.posSales||[]).reduce((total,sale)=>total+(sale.lines||[]).filter(line=>line.sku===sku).reduce((n,line)=>n+Number(line.qty||0),0),0);}
 function rimAvailable(sku){const item=getModule('RIM','pos')?.rows.find(row=>row[1]===sku);return item?Math.max(0,Number(item[3])-rimSold(sku)):0;}
-function rowArray(){const conf=moduleFor();if(!conf)return [];let arr=[...conf.rows];if(S.edition==='RIM'&&S.page==='inventory'){const catalogue=getModule('RIM','pos').rows;arr=arr.map(row=>{const product=catalogue.find(item=>item[0]===row[0]);if(!product)return row;const sold=rimSold(product[1]);const onHand=Math.max(0,Number(row[2])-sold),available=Math.max(0,Number(row[3])-sold);return [row[0],row[1],String(onHand),String(available),available<=5?'Low stock':'In stock'];});}const draft=S.local[key(S.edition,S.page)]||[];return [...draft,...arr].map((v,i)=>({v:S.edition==='RIM'&&S.page==='returns'&&S.preferences.returnStates?.[v[0]]?[...v.slice(0,-1),S.preferences.returnStates[v[0]].status]:v,index:i,local:i<draft.length}));}
+// One source of truth for RIM dashboard counts, record links, and local POS sales.
+// This bridge is evaluated on render, so a checkout or refund is reflected instantly.
+function rimDashboardSnapshot(){
+ const get=id=>getModule('RIM',id)?.rows||[];
+ const catalogue=get('pos');
+ const orders=[...(S.local['RIM:sales']||[]),...get('sales')];
+ const returns=[...(S.local['RIM:returns']||[]),...get('returns')].map(row=>{
+  const latest=S.preferences.returnStates?.[row[0]];
+  return latest?[...row.slice(0,-1),latest.status]:row;
+ });
+ const payments=get('payments');
+ const sales=S.preferences.posSales||[];
+ const paid=orders.filter(row=>/^Paid\b/i.test(row[3]));
+ const queued=paid.filter(row=>!/delivered|dispatched|cancelled/i.test(row[4]));
+ const pendingReturns=returns.filter(row=>!/refunded|rejected|closed/i.test(row[4]));
+ const tillReview=payments.filter(row=>/review|variance|mismatch/i.test(row[4]));
+ const low=get('inventory').map(row=>{
+  const product=catalogue.find(item=>item[0]===row[0]);
+  const sold=product?rimSold(product[1]):0;
+  const available=Math.max(0,Number(row[3])-sold);
+  return {sku:product?.[1]||row[0],item:{name:row[0],unit:'units'},location:row[1],available};
+ }).filter(row=>row.available<=7).sort((a,b)=>a.available-b.available);
+ const attention=[
+  ...queued.slice(0,3).map(row=>({type:'Orders',id:row[0],name:`Order ${row[0]}`,details:`${row[1]} · ${row[2]}`,location:row[4],status:row[4],go:'fulfilment',action:'Process'})),
+  ...pendingReturns.slice(0,2).map(row=>({type:'Returns',id:row[0],name:row[1],details:`${row[3]} · ${row[2]}`,location:'Returns desk',status:row[4],go:'returns',action:'Review'})),
+  ...tillReview.slice(0,2).map(row=>({type:'Till',id:row[0],name:'Till reconciliation',details:`Variance ${row[3]}`,location:row[0].split('/')[0].trim(),status:row[4],go:'payments',action:'Reconcile'})),
+  ...low.slice(0,2).map(row=>({type:'Low stock',id:row.sku,name:row.item.name,details:`${row.available} units available`,location:row.location,status:'Low stock',go:'inventory',action:'Review'}))
+ ];
+ const localRevenue=sales.reduce((sum,sale)=>sum+Number(sale.total||0),0);
+ const recentOrders=orders.slice(0,3);
+ const movements=RIM_DETAIL_VIEWS.inventory.Movements.rows.slice(0,3).map(row=>({name:row[1],info:`${row[4]} · ${row[2]}`,value:row[3]}));
+ return {
+  metrics:[['Recorded POS sales',`₦${localRevenue.toLocaleString('en-NG')}`,'This browser session','cart','pos'],['Orders to fulfil',queued.length,'Paid orders awaiting dispatch','file','fulfilment'],['Open returns',pendingReturns.length,'Awaiting review or refund','alert','returns'],['Low-stock lines',low.length,'Seven units or fewer','box','inventory']],
+  attention,low,
+  requests:recentOrders.map(row=>({id:row[0],name:row[1],secondary:`${row[2]} · ${row[4]}`,status:row[3],go:'sales'})),
+  activity:[...sales.slice(0,3).map(row=>({title:'POS checkout recorded',ref:row.id,time:'Current demo session',go:'sales'})),...RIM_DETAIL_VIEWS.inventory.Movements.rows.slice(0,3).map(row=>({title:row[4],ref:row[0],time:'Demo history',go:'inventory'}))].slice(0,4),
+  movements,
+  summary:[['Demo orders',String(orders.length)],['Paid orders',String(paid.length)],['Till reviews',String(tillReview.length)],['Returns recorded',String(returns.length)]],
+  meta:{stockLines:get('inventory').length,items:catalogue.length,locations:get('stores').length}
+ };
+}
+window.PrimeRIMBridge={dashboard:rimDashboardSnapshot};
+function rowArray(){const conf=moduleFor();if(!conf)return [];let arr=[...conf.rows],specialView=S.edition==='RIM'&&Boolean(RIM_DETAIL_VIEWS[S.page]?.[S.activeTab]);if(S.edition==='RIM'&&S.page==='inventory'&&!specialView){const catalogue=getModule('RIM','pos').rows;arr=arr.map(row=>{const product=catalogue.find(item=>item[0]===row[0]);if(!product)return row;const sold=rimSold(product[1]);const onHand=Math.max(0,Number(row[2])-sold),available=Math.max(0,Number(row[3])-sold);return [row[0],row[1],String(onHand),String(available),available<=5?'Low stock':'In stock'];});}const draft=specialView?[]:(S.local[key(S.edition,S.page)]||[]);return [...draft,...arr].map((v,i)=>({v:S.edition==='RIM'&&S.page==='returns'&&S.preferences.returnStates?.[v[0]]?[...v.slice(0,-1),S.preferences.returnStates[v[0]].status]:v,index:i,local:i<draft.length}));}
 const isStatusColumn=m=>/status|stage|result|availability|payment|fulfilment|condition|group/.test((m?.columns?.at(-1)||'').toLowerCase());
 // Tabs are views, not free-text searches. Only filter on a field when the demo
 // data contains that field. Other tabs retain the sample list with a clear note.
 const rimViewRules={
- sales:{Unpaid:r=>r[3]==='Unpaid',Pending:r=>['Not started','Ready to pack'].includes(r[4]),Invoices:r=>r[3]==='Paid',Cancelled:()=>false},
+ sales:{Unpaid:r=>r[3]==='Unpaid',Pending:r=>['Not started','Ready to pack'].includes(r[4]),Invoices:r=>/^Paid\b/i.test(r[3]),Cancelled:()=>false},
  returns:{Inspections:r=>/inspection/i.test(r[4]),Approvals:r=>/approval/i.test(r[4]),History:r=>/refunded/i.test(r[4])},
  products:{Variants:r=>Boolean(r[2]&&r[2]!=='—'),Brands:null,Barcodes:r=>/\b[A-Z]{2}-\d+\b/.test(r[0]),Bundles:()=>false},
  inventory:{Movements:()=>false,Transfers:()=>false,Counts:()=>false},
@@ -96,7 +138,7 @@ const rimViewRules={
  retailassets:{Devices:r=>/POS terminal/i.test(r[0]),Fixtures:r=>/Shelf/i.test(r[0]),Scanners:r=>/Scanner/i.test(r[0]),Maintenance:r=>/repair|fault/i.test(r.join(' '))},
  reports:{Sales:r=>/sales/i.test(r[0]),Stock:r=>/stock/i.test(r[0]),Returns:r=>/return/i.test(r[0])}
 };
-function viewRule(){const conf=moduleFor(),tab=S.activeTab||conf?.tabs?.[0];if(!conf||tab===conf.tabs[0])return null;const rules=rimViewRules[S.page];if(S.edition==='RIM'&&rules&&Object.hasOwn(rules,tab))return rules[tab];const statusIndex=conf.columns.findIndex(c=>/^(status|stage|result|availability|payment|fulfilment|condition)$/i.test(c));if(statusIndex<0)return null;const norm=s=>String(s).toLowerCase().replace(/s$/,'').trim();const relevant=rowArray().some(r=>norm(r.v[statusIndex])===norm(tab));return relevant?(r=>norm(r[statusIndex])===norm(tab)):null;}
+function viewRule(){const conf=moduleFor(),tab=S.activeTab||conf?.tabs?.[0];if(!conf||tab===conf.tabs[0])return null;if(S.edition==='RIM'&&RIM_DETAIL_VIEWS[S.page]?.[tab])return null;const rules=rimViewRules[S.page];if(S.edition==='RIM'&&rules&&Object.hasOwn(rules,tab))return rules[tab];const statusIndex=conf.columns.findIndex(c=>/^(status|stage|result|availability|payment|fulfilment|condition)$/i.test(c));if(statusIndex<0)return null;const norm=s=>String(s).toLowerCase().replace(/s$/,'').trim();const relevant=rowArray().some(r=>norm(r.v[statusIndex])===norm(tab));return relevant?(r=>norm(r[statusIndex])===norm(tab)):null;}
 const filteredRows=()=>{let arr=rowArray();const rule=viewRule();if(rule)arr=arr.filter(r=>rule(r.v));const q=S.search.toLowerCase().trim();if(q)arr=arr.filter(r=>r.v.join(' ').toLowerCase().includes(q));if(S.filter!=='All')arr=arr.filter(r=>String(r.v.at(-1))===S.filter);return arr;};
 const statuses=()=>isStatusColumn(moduleFor())?[...new Set(rowArray().map(r=>String(r.v[r.v.length-1])))].filter(s=>s.length<35):[];
 const note=(t)=>{S.toast=t;render();clearTimeout(note.timer);note.timer=setTimeout(()=>{S.toast='';const el=document.getElementById('toast');if(el)el.remove()},3700)};
@@ -130,7 +172,7 @@ let contextNote=(S.page==='approvals')?`<div class="inline-hint">${I('shield',16
 (S.edition==='TIM'&&['tools','issue','inspections','calibration'].includes(S.page))?`<div class="inline-hint">${I('alert',16)} Tools with failed inspections or expired calibration cannot be issued in a real workflow.</div>`:'';
 const selectedView=S.activeTab||m.tabs[0];
 const hasFilters=Boolean(S.search.trim()||S.filter!=='All');
-const viewUnmapped=selectedView!==m.tabs[0]&&!viewRule();
+const viewUnmapped=selectedView!==m.tabs[0]&&!viewRule()&&!(S.edition==='RIM'&&RIM_DETAIL_VIEWS[S.page]?.[selectedView]);
 const columnFilterLabel=m.columns.at(-1)||'Status';
 return `${pageTitle(m.name,m.subtitle,!isReadOnly&&action?action:'',!isReadOnly?'data-action="create"':'')}<div class="page-toolbar"><div class="tabs" role="group" aria-label="${safe(m.name)} views">${m.tabs.map((t,i)=>`<button type="button" aria-pressed="${(S.activeTab||m.tabs[0])===t}" data-tab="${safe(t)}" class="${(S.activeTab||m.tabs[0])===t?'active':''}">${safe(t)}</button>`).join('')}</div></div>${contextNote}<div class="view-context" role="status"><span>${safe(selectedView)} view</span><span>${rows.length} ${rows.length===1?'record':'records'} shown</span>${viewUnmapped?'<small>Showing available sample records for this view.</small>':''}</div><section class="panel records-panel"><div class="table-tools"><div class="filter-search">${I('search',17)}<input id="module-filter" type="search" aria-label="Filter ${safe(m.name)}" placeholder="Search ${safe(m.name.toLowerCase())}..." value="${safe(S.search)}" /></div>${statuses().length>1?`<label class="filter-select"><span class="sr-only">Filter by ${safe(columnFilterLabel.toLowerCase())}</span><select data-change="status-filter" aria-label="Filter by ${safe(columnFilterLabel.toLowerCase())}"><option>All</option>${statuses().map(s=>`<option ${S.filter===s?'selected':''}>${safe(s)}</option>`).join('')}</select>${I('down',14)}</label>`:'' }<button class="btn soft export" data-action="export" aria-label="Export visible records">${I('download',16)}<span>Export</span></button></div>${rows.length?`<div class="table-scroller"><table class="record-table"><thead><tr>${m.columns.map(c=>`<th>${safe(c)}</th>`).join('')}<th class="actions-col"><span class="sr-only">Open record</span></th></tr></thead><tbody>${slice.map(({v,index,local})=>`<tr><td colspan="${m.columns.length+1}" class="mobile-record"><button data-action="record" data-index="${index}"><span class="mobile-row-title">${safe(v[0])}${local?'<span class="mini-local">Local</span>':''}</span>${v.slice(1).map((c,i)=>`<span class="mobile-cell"><small>${safe(m.columns[i+1])}</small><strong>${i===v.length-2&&isStatusColumn(m)?badge(c):safe(c)}</strong></span>`).join('')}</button></td>${v.map((x,i)=>`<td class="desk-cell">${i===0?`<button class="record-key" data-action="record" data-index="${index}">${safe(x)}</button>${local?'<span class="mini-local">Local</span>':''}`:i===v.length-1&&isStatusColumn(m)?badge(x):safe(x)}</td>`).join('')}<td class="desk-cell arrow-cell"><button class="small-arrow" data-action="record" data-index="${index}" title="Open ${safe(v[0])}" aria-label="Open ${safe(v[0])}">${I('chevron',16)}</button></td></tr>`).join('')}</tbody></table></div><div class="table-foot"><span>${rows.length} ${rows.length===1?'record':'records'} · ${S.edition} workspace</span><div><button class="pagination" data-action="prev-page" ${S.pageIndex<=0?'disabled':''} aria-label="Previous page">${I('chevron',17)}</button><span>${S.pageIndex+1} / ${totalPages}</span><button class="pagination" data-action="next-page" ${S.pageIndex>=totalPages-1?'disabled':''} aria-label="Next page">${I('chevron',17)}</button></div></div>`:`<div class="empty-state">${I(isDocs?'file':'search',28)}<h3>${hasFilters?'No matching records':'No sample records in this view'}</h3><p>${hasFilters?'Try another search or clear the filters.':'Select another view to explore the sample data.'}</p>${hasFilters||selectedView!==m.tabs[0]?'<button class="btn soft" data-action="clear-filters">Show all records</button>':(!isReadOnly?'<button class="btn soft" data-action="create">Create a record</button>':'')}</div>`}</section>`;}
 function posPage(m){

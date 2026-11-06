@@ -71,6 +71,12 @@ body.prime-modal-open{overflow:hidden}
 .pim-btn:focus-visible,.itim-btn:focus-visible,.pim-table-link:focus-visible,.itim-text-link:focus-visible{outline:2px solid #2563eb;outline-offset:2px}
 .itim-table-footer{font-size:12px;padding:12px 10px;color:#6d849e}
 .itim-empty{padding:24px 15px;background:#fbfdff;border:1px dashed #dce8f4;border-radius:11px;line-height:1.6}
+/* Record details use the same centered dialog language as workflow forms.
+   Detail content scrolls; the title and actions remain available. */
+.pim-overlay:has(.prime-detail-panel),.itim-detail-backdrop{align-items:center;justify-content:center;padding:24px}
+.pim-drawer.prime-detail-panel,.itim-modal.itim-detail-drawer{width:min(720px,calc(100vw - 48px));max-width:720px;height:auto;max-height:min(88dvh,900px);min-height:0;margin:0;border-radius:18px;border:1px solid var(--dialog-stroke);box-shadow:0 30px 95px rgba(9,32,66,.32);overflow:hidden;display:flex;flex-direction:column}
+.pim-drawer.prime-detail-panel .pim-drawer-head,.itim-detail-drawer .itim-modal-top{flex-shrink:0}
+.pim-drawer.prime-detail-panel .pim-drawer-body,.itim-detail-drawer .itim-detail-content{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain}
 @media(max-width:720px){
  .pim-form-dialog,.itim-modal:not(.itim-detail-drawer){width:100%;max-width:none;max-height:min(95dvh,950px);border-radius:18px 18px 0 0;margin:auto 0 0;align-self:flex-end}
  .pim-overlay,.itim-modal-backdrop:not(.itim-detail-backdrop){align-items:flex-end;place-items:end center;padding:0}
@@ -81,8 +87,8 @@ body.prime-modal-open{overflow:hidden}
  .pim-form-footer button,.itim-form-footer button{flex:1 1 auto;min-height:45px}
  .pim-form-footer button[data-pim-action="close"]{flex:0 0 auto}
  .itim-field-grid>.itim-field:has(textarea),.itim-field-grid>.itim-checklist,.itim-field-grid>.itim-help-text{grid-column:auto}
- .itim-detail-drawer{width:100%!important;border-radius:0!important}
- .pim-drawer.prime-detail-panel{width:100%}
+ .pim-overlay:has(.prime-detail-panel),.itim-detail-backdrop{align-items:flex-end;justify-content:center;padding:0}
+ .itim-modal.itim-detail-drawer,.pim-drawer.prime-detail-panel{width:100%;max-width:none;max-height:92dvh;border-radius:18px 18px 0 0}
  .pim-modal-help,.itim-modal-subtitle{font-size:12px}
 }
 @media(max-width:390px){.pim-steps{gap:5px}.pim-steps span{padding:7px 6px;font-size:10px}.itim-form-footer .itim-btn{padding:11px}}
