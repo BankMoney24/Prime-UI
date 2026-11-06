@@ -67,6 +67,29 @@
 .tim-backdrop .tim-form-fields :is(input,select,textarea){min-height:44px}
 .tim-backdrop .tim-form-buttons{position:sticky;bottom:0;z-index:1;padding-top:14px;background:#fff;border-top:1px solid #e1eaf5}
 .tim-backdrop .tim-form-buttons button{min-height:44px;padding:10px 16px}
+/* Shared record pages: a concise view summary, accessible tools, and generous hit areas. */
+.view-context{display:flex;align-items:center;flex-wrap:wrap;gap:8px 14px;margin:-2px 0 14px;color:#617993;font-size:12px}
+.view-context>span:first-child{display:inline-flex;align-items:center;padding:6px 11px;border:1px solid #d9e6f6;border-radius:999px;background:#f1f6fd;color:#22529b;font-weight:720}
+.view-context>span:nth-child(2){font-variant-numeric:tabular-nums;font-weight:650}
+.view-context small{width:100%;color:#647d99;font-size:11px;line-height:1.4}
+.records-panel .filter-search,.records-panel .filter-select select,.records-panel .table-tools>.btn{min-height:44px;height:44px}
+.records-panel .filter-search input{height:100%;font-size:13px}
+.records-panel .record-key{min-height:36px;display:inline-flex;align-items:center;font-size:12px}
+.records-panel .small-arrow{display:inline-grid;place-items:center;min-width:44px;min-height:44px;border-radius:10px}
+.records-panel .small-arrow:hover{background:#edf5ff}
+.records-panel .pagination{width:40px;height:40px;min-width:40px}
+.records-panel .pagination:disabled{opacity:.4;cursor:not-allowed;background:#f6f8fb}
+.records-panel .empty-state{padding:48px 20px}
+.records-panel .empty-state .btn{min-height:44px}
+.records-panel .table-tools,.records-panel .record-table,.records-panel .table-foot{font-variant-numeric:tabular-nums}
+.records-panel :is(button,input,select):focus-visible,.page-toolbar button:focus-visible,.pos-mobile-cart:focus-visible{outline:2px solid #2563eb;outline-offset:2px}
+.itim-mobile-record .itim-mobile-field{display:grid;grid-template-columns:minmax(92px,40%) 1fr;gap:10px;align-items:baseline;padding:4px 0}
+.itim-mobile-record .itim-mobile-field small{color:#697e99;font-size:11px;font-weight:590}
+.itim-mobile-record .itim-mobile-field span{color:#30496a;font-size:12px;line-height:1.4;overflow-wrap:anywhere}
+.itim-mobile-record .itim-mobile-actions .itim-btn{min-height:44px}
+.itim-filter-tools :is(input,select,button),.itim-context :is(select,button){min-height:44px}
+.pim-workspace .pim-tabs button:focus-visible,.itim-mobile-record button:focus-visible{outline:2px solid #2563eb;outline-offset:2px}
+.pos-mobile-cart{display:none}
 @media(max-width:720px){
  .overlay{align-items:flex-end;padding:0!important}
  .overlay .modal,.overlay .modal.wide{width:100%;max-width:none;max-height:min(94dvh,950px)!important;border-radius:19px 19px 0 0!important}
@@ -83,4 +106,19 @@
  .tim-backdrop .tim-modal{width:100%!important;max-width:none!important;max-height:94dvh!important;border-radius:18px 18px 0 0!important}
  .tim-backdrop .tim-form-fields{grid-template-columns:1fr}
  .tim-backdrop .tim-form-fields label:has(textarea){grid-column:auto}
+}
+@media(max-width:700px){
+ .view-context{margin:1px 0 12px;gap:8px 11px}
+ .records-panel .table-tools{align-items:stretch}
+ .records-panel .filter-search{height:46px;min-height:46px}
+ .records-panel .filter-select select,.records-panel .table-tools>.btn{height:44px}
+ .records-panel .mobile-record button{min-height:80px;row-gap:12px}
+ .records-panel .mobile-row-title{font-size:13px;line-height:1.4}
+ .records-panel .mobile-cell strong{font-size:12px;line-height:1.35}
+ .pos-basket{scroll-margin-top:82px}
+ .pos-mobile-cart{position:fixed;z-index:45;bottom:calc(69px + env(safe-area-inset-bottom));left:12px;right:12px;display:flex;align-items:center;justify-content:space-between;gap:9px;min-height:54px;border:1px solid #1e55af;border-radius:13px;background:#184b9d;box-shadow:0 7px 23px rgba(11,52,115,.24);padding:11px 14px;color:white;font-size:12px;font-weight:740}
+ .pos-mobile-cart>span{display:flex;align-items:center;gap:9px;min-width:0}
+ .pos-mobile-cart>strong{white-space:nowrap;font-size:14px;font-variant-numeric:tabular-nums}
+ .pos-mobile-cart:disabled{opacity:.58;cursor:not-allowed;background:#4c617c;border-color:#4c617c}
+ .main-content:has(.pos-layout){padding-bottom:175px}
 }
