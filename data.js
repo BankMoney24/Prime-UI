@@ -1,4 +1,6 @@
 /* Public demonstration records. Nothing in this file is production company data. */
+import {EXTRA_MODULE_ROWS,RIM_DETAIL_VIEWS} from './demo-fixtures.js';
+export {RIM_DETAIL_VIEWS};
 export const ORGANISATION = 'Demo Engineering Ltd';
 export const USER_NAME = 'Demo Owner';
 export const ED = {
@@ -124,6 +126,21 @@ export const ANALYTICS={
  RIM:M('analytics','Analytics','Compare sales, returns and store performance.',['Metric','Current period','Previous period','Change','Interpretation'],[['Gross sales','₦1.8m','₦1.6m','+12.5%','Sales increased'],['Refund rate','1.2%','1.6%','−0.4%','Fewer returns'],['Orders fulfilled','182','164','+11%','More orders shipped']],['Overview','Sales','Stores','Returns'],'Export summary','chart'),
  TIM:M('analytics','Analytics','Measure utilisation, service and compliance.',['Metric','Current period','Previous period','Change','Interpretation'],[['Tool utilisation','68%','61%','+7%','Better utilisation'],['Overdue returns','3','5','−2','Fewer overdue tools'],['Calibration compliance','96%','93%','+3%','More compliant tools']],['Overview','Utilisation','Calibration','Maintenance'],'Export summary','chart')
 };
+// Keep each record in its own module schema and preserve the original demo IDs.
+// Enriched scenarios are deterministic, so a refresh cannot fabricate new sales.
+for(const [edition,extras] of Object.entries(EXTRA_MODULE_ROWS)){
+  for(const [moduleId,records] of Object.entries(extras)){
+    const module=edition==='SHARED'?SHARED[moduleId]:MODULES[edition]?.find(m=>m.id===moduleId);
+    if(!module)throw new Error(`Unknown demo module ${edition}/${moduleId}`);
+    const ids=new Set(module.rows.map(row=>String(row[0])));
+    for(const record of records){
+      if(record.length!==module.columns.length)throw new Error(`Invalid demo record in ${edition}/${moduleId}`);
+      if(ids.has(String(record[0])))continue;
+      module.rows.push(record);
+      ids.add(String(record[0]));
+    }
+  }
+}
 export function getModule(edition,id){return (id==='analytics'?ANALYTICS[edition]:null)||SHARED[id]||MODULES[edition]?.find(m=>m.id===id)||null;}
 export function isShared(id){return id in SHARED;}
 export function allModules(edition){return MODULES[edition]||[];}

@@ -62,7 +62,7 @@ test('Source PIM modules retain page-level data and RIM/TIM remain defined',()=>
  for(const [edition,mods] of Object.entries(appData.MODULES))assert.ok(mods.length>10,edition);
  for(const id of ['requests','catalogue','inventory','purchasing','assets','projects','suppliers','counts','custody','transfers','replenishment','reports','field'])assert.ok(appData.getModule('PIM',id),id);
 });
-test('Reset restores baseline state and previous stock moves are cleared',()=>{
- pim.reset();assert.equal(pim.inventory.snapshot().movements.length,1);assert.equal(pim.inventory.onHand('PPE-01','Central warehouse'),40);
+test('Reset restores simulated history and clears transaction changes',()=>{
+ pim.reset();assert.equal(pim.inventory.snapshot().movements.length,4);assert.equal(pim.inventory.onHand('PPE-01','Central warehouse'),40);
 });
 console.log(`\n${checks} PIM domain and page tests passed.`);

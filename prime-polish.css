@@ -20,3 +20,105 @@
 .prime-walkthrough{text-align:left}.walkthrough-header{display:flex;align-items:center;justify-content:space-between;gap:15px}.walkthrough-counter{font-size:12px;font-weight:700;color:#50709c}.walkthrough-visual{height:110px;border-radius:14px;background:linear-gradient(135deg,#e9f2ff,#f6faff);margin:20px 0;display:flex;align-items:center;justify-content:center;color:#245fe2}.prime-walkthrough h2{font-size:23px;margin-bottom:8px}.walkthrough-progress{display:flex;gap:7px;margin-top:22px}.walkthrough-progress span{height:5px;flex:1;border-radius:6px;background:#e1e8f4}.walkthrough-progress .done{background:#2563eb}.wallet-topup-summary{padding:14px 16px;background:#f0f6ff;border:1px solid #d9e9ff;border-radius:12px;margin:16px 0 18px;display:flex;align-items:center;justify-content:space-between;gap:12px}.wallet-topup-summary span{font-size:12px;color:#647a97}.wallet-topup-summary strong{color:#1a4fa9;font-size:18px}
 @media(max-width:720px){.rim-page-overview{align-items:stretch;flex-direction:column;padding:15px}.rim-page-metrics{width:100%}.rim-page-metrics>div{flex:1;min-width:0}.pim-overlay:has(.prime-detail-panel),.itim-modal-backdrop.itim-detail-backdrop{padding:12px!important;align-items:center!important;justify-content:center!important;place-items:center!important}.pim-drawer.prime-detail-panel,.itim-modal.itim-detail-drawer{width:100%!important;height:auto!important;max-height:88dvh!important;border-radius:16px!important}.prime-walkthrough h2{font-size:20px}.walkthrough-visual{height:86px}}
 @media(prefers-reduced-motion:reduce){.pim-drawer.prime-detail-panel,.itim-modal.itim-detail-drawer{animation:none!important}}
+
+/* 6 Nov: one dialog rhythm for PRIME shared actions and retail checkout. */
+.overlay .modal{display:flex;flex-direction:column;padding:0!important;width:min(560px,100%);max-height:min(90dvh,860px)!important;overflow-y:auto!important;overscroll-behavior:contain}
+.overlay .modal.wide{width:min(720px,100%);max-width:720px}
+.overlay .modal>.modal-eyebrow,.overlay .modal>h2,.overlay .modal>.modal-subtitle,.overlay .modal>.record-modal-top,.overlay .modal>.detail-fields,.overlay .modal>.detail-timeline,.overlay .modal>.modal-review-toolbar,.overlay .modal>.wallet-topup-summary,.overlay .modal>.demo-label,.overlay .modal>.inline-hint,.overlay .modal>.pos-receipt{margin-left:24px;margin-right:24px}
+.overlay .modal>.modal-eyebrow{margin-top:24px;padding-right:34px}
+.overlay .modal>h2{margin-top:0;padding-right:36px}
+.overlay .modal>.modal-subtitle{margin-bottom:14px}
+.overlay .modal>form,.overlay .modal>.prime-walkthrough{min-height:0;display:flex;flex-direction:column;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin}
+.overlay .modal>form>label,.overlay .modal>form>.modal-fields,.overlay .modal>form>.pos-payment-error{margin-left:24px;margin-right:24px}
+.overlay .modal>form>.modal-fields{min-height:0;overflow-y:auto;padding:2px 1px 14px;margin-top:15px}
+.overlay .modal .modal-actions{position:sticky;bottom:0;flex-shrink:0;z-index:1;background:#fff;padding:15px 24px calc(15px + env(safe-area-inset-bottom));margin-top:auto;border-top:1px solid #e4ebf5}
+.overlay .modal .modal-actions button{min-height:44px}
+.overlay .modal>.modal-close{z-index:3;top:18px;right:18px;border:1px solid #dfebf7;background:#f7faff;height:40px;width:40px}
+.overlay .modal :is(button,input,select,textarea):focus-visible,.pos-layout :is(button,input):focus-visible{outline:2px solid #2563eb!important;outline-offset:2px}
+.overlay .modal .prime-walkthrough{padding:22px 24px 0}
+.overlay .modal .prime-walkthrough .modal-actions{margin:18px -24px 0}
+.pos-receipt{display:grid;gap:11px;margin-top:8px;padding:15px!important;border:1px solid #dfe8f5;background:#f7faff;border-radius:13px}
+.pos-receipt-line,.pos-receipt-total{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:13px}
+.pos-receipt-line small{color:#637c97}
+.pos-receipt-total{padding-top:13px;border-top:1px solid #dbe6f3;font-weight:750}
+.pos-receipt-total strong{font-size:20px;color:#173d85}
+.pos-payment-error:not([hidden]){padding:11px 13px;margin-top:12px;border-radius:9px;border:1px solid #e9afac;background:#fff2f0;color:#9d3432;font-size:12px}
+.overlay .modal .prime-acknowledge{display:flex;align-items:flex-start;gap:10px;font-size:13px;line-height:1.5;margin-top:18px}
+.overlay .modal .prime-acknowledge input{width:20px;height:20px;min-width:20px;min-height:20px;accent-color:#2563eb;margin:0}
+#pos-cash-field[hidden]{display:none!important}
+.pos-product:disabled{opacity:.58;cursor:not-allowed;background:#f5f7fa}
+.pos-product:disabled .pos-add{background:#e2e8f0;color:#768496}
+.pos-no-results{display:grid;justify-items:start;gap:9px;border:1px dashed #cad9eb;border-radius:12px;background:#f9fbff;padding:25px}
+.pos-no-results p{font-size:12px;color:#657d98}
+.pos-no-results .btn{min-height:40px}
+.pos-layout .pos-product{min-height:64px}
+.pos-layout .qty-controls button{width:40px;height:40px;min-width:40px;display:grid;place-items:center;font-size:19px}
+.pos-layout .qty-controls button:disabled{opacity:.35;cursor:not-allowed}
+.pos-layout .qty-controls span{width:27px;font-weight:700}
+.pos-layout .basket-line{grid-template-columns:minmax(0,1fr) auto minmax(82px,max-content)}
+.pos-basket .basket-bottom{position:sticky;bottom:0;background:#fff;padding-bottom:env(safe-area-inset-bottom)}
+.pos-basket .link-btn:disabled{opacity:.38;cursor:not-allowed}
+/* Legacy TIM workflows follow the same centered modal and responsive controls. */
+.tim-backdrop{display:flex!important;justify-content:center!important;align-items:center!important;padding:20px!important;overscroll-behavior:contain}
+.tim-backdrop .tim-modal{position:relative!important;inset:auto!important;transform:none!important;width:min(680px,100%)!important;max-width:680px!important;max-height:88dvh!important;overflow-y:auto!important;border-radius:18px!important;box-shadow:0 26px 78px rgba(12,34,75,.27)!important}
+.tim-backdrop .tim-modal-top{padding-bottom:15px;border-bottom:1px solid #e1eaf5;margin-bottom:17px}
+.tim-backdrop .tim-form-fields{grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}
+.tim-backdrop .tim-form-fields label:has(textarea){grid-column:1/-1}
+.tim-backdrop .tim-form-fields :is(input,select,textarea){min-height:44px}
+.tim-backdrop .tim-form-buttons{position:sticky;bottom:0;z-index:1;padding-top:14px;background:#fff;border-top:1px solid #e1eaf5}
+.tim-backdrop .tim-form-buttons button{min-height:44px;padding:10px 16px}
+/* Shared record pages: a concise view summary, accessible tools, and generous hit areas. */
+.view-context{display:flex;align-items:center;flex-wrap:wrap;gap:8px 14px;margin:-2px 0 14px;color:#617993;font-size:12px}
+.view-context>span:first-child{display:inline-flex;align-items:center;padding:6px 11px;border:1px solid #d9e6f6;border-radius:999px;background:#f1f6fd;color:#22529b;font-weight:720}
+.view-context>span:nth-child(2){font-variant-numeric:tabular-nums;font-weight:650}
+.view-context small{width:100%;color:#647d99;font-size:11px;line-height:1.4}
+.records-panel .filter-search,.records-panel .filter-select select,.records-panel .table-tools>.btn{min-height:44px;height:44px}
+.records-panel .filter-search input{height:100%;font-size:13px}
+.records-panel .record-key{min-height:36px;display:inline-flex;align-items:center;font-size:12px}
+.records-panel .small-arrow{display:inline-grid;place-items:center;min-width:44px;min-height:44px;border-radius:10px}
+.records-panel .small-arrow:hover{background:#edf5ff}
+.records-panel .pagination{width:40px;height:40px;min-width:40px}
+.records-panel .pagination:disabled{opacity:.4;cursor:not-allowed;background:#f6f8fb}
+.records-panel .empty-state{padding:48px 20px}
+.records-panel .empty-state .btn{min-height:44px}
+.records-panel .table-tools,.records-panel .record-table,.records-panel .table-foot{font-variant-numeric:tabular-nums}
+.records-panel :is(button,input,select):focus-visible,.page-toolbar button:focus-visible,.pos-mobile-cart:focus-visible{outline:2px solid #2563eb;outline-offset:2px}
+.itim-mobile-record .itim-mobile-field{display:grid;grid-template-columns:minmax(92px,40%) 1fr;gap:10px;align-items:baseline;padding:4px 0}
+.itim-mobile-record .itim-mobile-field small{color:#697e99;font-size:11px;font-weight:590}
+.itim-mobile-record .itim-mobile-field span{color:#30496a;font-size:12px;line-height:1.4;overflow-wrap:anywhere}
+.itim-mobile-record .itim-mobile-actions .itim-btn{min-height:44px}
+.itim-filter-tools :is(input,select,button),.itim-context :is(select,button){min-height:44px}
+.pim-workspace .pim-tabs button:focus-visible,.itim-mobile-record button:focus-visible{outline:2px solid #2563eb;outline-offset:2px}
+.pos-mobile-cart{display:none}
+@media(max-width:720px){
+ .overlay{align-items:flex-end;padding:0!important}
+ .overlay .modal,.overlay .modal.wide{width:100%;max-width:none;max-height:min(94dvh,950px)!important;border-radius:19px 19px 0 0!important}
+ .overlay .modal>.modal-eyebrow,.overlay .modal>h2,.overlay .modal>.modal-subtitle,.overlay .modal>.record-modal-top,.overlay .modal>.detail-fields,.overlay .modal>.detail-timeline,.overlay .modal>.modal-review-toolbar,.overlay .modal>.wallet-topup-summary,.overlay .modal>.demo-label,.overlay .modal>.inline-hint,.overlay .modal>.pos-receipt{margin-left:18px;margin-right:18px}
+ .overlay .modal>form>label,.overlay .modal>form>.modal-fields,.overlay .modal>form>.pos-payment-error{margin-left:18px;margin-right:18px}
+ .overlay .modal .modal-actions{padding:13px 18px calc(13px + env(safe-area-inset-bottom))}
+ .overlay .modal .modal-actions button{flex:1}
+ .overlay .modal .prime-walkthrough{padding:20px 18px 0}
+ .overlay .modal .prime-walkthrough .modal-actions{margin-left:-18px;margin-right:-18px}
+ .pos-layout .basket-line{grid-template-columns:minmax(0,1fr) auto;gap:9px}
+ .pos-layout .basket-line>strong{grid-column:1/-1;justify-self:end}
+ .pos-layout .pos-product{min-height:68px}
+ .tim-backdrop{align-items:flex-end!important;padding:0!important}
+ .tim-backdrop .tim-modal{width:100%!important;max-width:none!important;max-height:94dvh!important;border-radius:18px 18px 0 0!important}
+ .tim-backdrop .tim-form-fields{grid-template-columns:1fr}
+ .tim-backdrop .tim-form-fields label:has(textarea){grid-column:auto}
+}
+@media(max-width:700px){
+ .view-context{margin:1px 0 12px;gap:8px 11px}
+ .records-panel .table-tools{align-items:stretch}
+ .records-panel .filter-search{height:46px;min-height:46px}
+ .records-panel .filter-select select,.records-panel .table-tools>.btn{height:44px}
+ .records-panel .mobile-record button{min-height:80px;row-gap:12px}
+ .records-panel .mobile-row-title{font-size:13px;line-height:1.4}
+ .records-panel .mobile-cell strong{font-size:12px;line-height:1.35}
+ .pos-basket{scroll-margin-top:82px}
+ .pos-mobile-cart{position:fixed;z-index:45;bottom:calc(69px + env(safe-area-inset-bottom));left:12px;right:12px;display:flex;align-items:center;justify-content:space-between;gap:9px;min-height:54px;border:1px solid #1e55af;border-radius:13px;background:#184b9d;box-shadow:0 7px 23px rgba(11,52,115,.24);padding:11px 14px;color:white;font-size:12px;font-weight:740}
+ .pos-mobile-cart>span{display:flex;align-items:center;gap:9px;min-width:0}
+ .pos-mobile-cart>strong{white-space:nowrap;font-size:14px;font-variant-numeric:tabular-nums}
+ .pos-mobile-cart:disabled{opacity:.58;cursor:not-allowed;background:#4c617c;border-color:#4c617c}
+ .main-content:has(.pos-layout){padding-bottom:175px}
+}

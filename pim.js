@@ -18,6 +18,12 @@
       {sku:'OFF-07',name:'Printer paper',category:'Office supplies',unit:'Ream',reorder:15,lead:4,safety:6,averageDaily:2,tracking:'None',barcode:'0123456789015',unitCost:4500},
       {sku:'MNT-09',name:'Bearing kit',category:'Maintenance',unit:'Kit',reorder:8,lead:12,safety:4,averageDaily:1,tracking:'Lot',barcode:'0123456789016',unitCost:12000},
       {sku:'PPE-10',name:'Safety boots',category:'Safety equipment',unit:'Pair',reorder:12,lead:6,safety:4,averageDaily:1,tracking:'None',barcode:'0123456789017',unitCost:21000}
+      ,{sku:'PPE-11',name:'High-visibility vest',category:'Safety equipment',unit:'Each',reorder:18,lead:4,safety:6,averageDaily:2,tracking:'None',barcode:'0123456789018',unitCost:3900}
+      ,{sku:'MNT-12',name:'Hydraulic hose',category:'Maintenance',unit:'Each',reorder:10,lead:9,safety:4,averageDaily:1,tracking:'Serial',barcode:'0123456789019',unitCost:18500}
+      ,{sku:'ELE-15',name:'Circuit breaker',category:'Electrical',unit:'Each',reorder:12,lead:7,safety:6,averageDaily:1,tracking:'Lot',barcode:'0123456789020',unitCost:14500}
+      ,{sku:'CIV-20',name:'Cement bag',category:'Civil works',unit:'Bag',reorder:80,lead:3,safety:30,averageDaily:12,tracking:'Lot',barcode:'0123456789021',unitCost:7800}
+      ,{sku:'MNT-21',name:'Filter cartridge',category:'Maintenance',unit:'Each',reorder:15,lead:6,safety:5,averageDaily:2,tracking:'Lot',barcode:'0123456789022',unitCost:6400}
+      ,{sku:'OFF-22',name:'Toner cartridge',category:'Office supplies',unit:'Each',reorder:8,lead:5,safety:3,averageDaily:1,tracking:'None',barcode:'0123456789023',unitCost:16500}
     ],
     balances:[
       {sku:'PPE-01',location:'Central warehouse',opening:40,reserved:12,quarantine:0},
@@ -26,43 +32,100 @@
       {sku:'OFF-07',location:'Head office',opening:9,reserved:0,quarantine:0},
       {sku:'MNT-09',location:'Workshop',opening:13,reserved:0,quarantine:2},
       {sku:'PPE-10',location:'Central warehouse',opening:24,reserved:4,quarantine:0}
+      ,{sku:'PPE-11',location:'Central warehouse',opening:45,reserved:8,quarantine:0}
+      ,{sku:'PPE-11',location:'Lekki store',opening:12,reserved:2,quarantine:0}
+      ,{sku:'MNT-12',location:'Workshop',opening:8,reserved:0,quarantine:1}
+      ,{sku:'ELE-15',location:'Central warehouse',opening:31,reserved:5,quarantine:0}
+      ,{sku:'CIV-20',location:'Lekki store',opening:120,reserved:24,quarantine:0}
+      ,{sku:'MNT-21',location:'Workshop',opening:18,reserved:0,quarantine:2}
+      ,{sku:'OFF-22',location:'Head office',opening:4,reserved:0,quarantine:0}
+      ,{sku:'PPE-02',location:'Central warehouse',opening:62,reserved:6,quarantine:0}
+      ,{sku:'ELE-04',location:'Workshop',opening:80,reserved:0,quarantine:0}
     ],
     locations:['Central warehouse','Lekki store','Head office','Workshop','Quarantine zone'],
-    movements:[{id:'MOV-001',sku:'ELE-04',location:'Central warehouse',delta:0,type:'Opening reference',reference:'OPEN-2026',date:'2026-10-30'}],
+    movements:[
+      {id:'MOV-001',sku:'ELE-04',location:'Central warehouse',delta:0,type:'Opening reference',reference:'OPEN-2026',date:'2026-10-30'},
+      {id:'MOV-002',sku:'PPE-01',location:'Central warehouse',delta:0,type:'Historical receipt reference',reference:'GRN-0020',date:'2026-11-02'},
+      {id:'MOV-003',sku:'MNT-09',location:'Workshop',delta:0,type:'Historical count reference',reference:'CNT-0010',date:'2026-11-03'},
+      {id:'MOV-004',sku:'CIV-20',location:'Lekki store',delta:0,type:'Opening reference',reference:'OPEN-LK-2026',date:'2026-11-04'}
+    ],
     requests:[
       {id:'REQ-0042',requester:'Ada Okafor',sku:'PPE-01',qty:12,location:'Central warehouse',needed:'2026-11-02',status:'Awaiting approval',reason:'New site team',allocated:0},
       {id:'REQ-0043',requester:'Tunde Bello',sku:'ELE-04',qty:50,location:'Central warehouse',needed:'2026-11-03',status:'Approved',reason:'Installation work',allocated:0},
-      {id:'REQ-0044',requester:'Amaka Obi',sku:'PPE-02',qty:20,location:'Lekki store',needed:'2026-11-05',status:'Draft',reason:'Workshop PPE',allocated:0}
+      {id:'REQ-0044',requester:'Amaka Obi',sku:'PPE-02',qty:20,location:'Lekki store',needed:'2026-11-05',status:'Draft',reason:'Workshop PPE',allocated:0},
+      {id:'REQ-0045',requester:'Amina Yusuf',sku:'MNT-12',qty:3,location:'Workshop',needed:'2026-11-09',status:'Awaiting approval',reason:'Hydraulic line repairs',allocated:0,project:'Warehouse extension'},
+      {id:'REQ-0046',requester:'Ada Okafor',sku:'PPE-11',qty:8,location:'Central warehouse',needed:'2026-11-10',status:'Approved',reason:'Safety briefing supplies',allocated:0,project:'Lekki refurbishment'},
+      {id:'REQ-0047',requester:'Tunde Bello',sku:'ELE-15',qty:5,location:'Central warehouse',needed:'2026-11-08',status:'Allocated',reason:'Panel installation',allocated:5,project:'Office fit-out'},
+      {id:'REQ-0048',requester:'Amina Yusuf',sku:'CIV-20',qty:24,location:'Lekki store',needed:'2026-11-07',status:'Allocated',reason:'Foundation repair',allocated:24,project:'Lekki refurbishment'},
+      {id:'REQ-0049',requester:'Amaka Obi',sku:'MNT-21',qty:4,location:'Workshop',needed:'2026-11-12',status:'Draft',reason:'Routine filter replacements',allocated:0,project:'Warehouse extension'},
+      {id:'REQ-0050',requester:'Ada Okafor',sku:'OFF-22',qty:2,location:'Head office',needed:'2026-11-14',status:'Awaiting approval',reason:'Site report printing',allocated:0,project:'Office fit-out'},
+      {id:'REQ-0051',requester:'Tunde Bello',sku:'PPE-10',qty:3,location:'Central warehouse',needed:'2026-11-03',status:'Issued',reason:'Crew boot replacement',allocated:0,issued:3,returned:0,project:'Warehouse extension'}
     ],
     orders:[
       {id:'PO-0018',supplier:'Atlas Supplies',sku:'PPE-01',ordered:40,received:0,location:'Central warehouse',expected:'2026-11-03',status:'Ordered'},
       {id:'PO-0019',supplier:'Metro Equipment',sku:'PPE-02',ordered:60,received:20,location:'Lekki store',expected:'2026-11-04',status:'Part received'},
-      {id:'PO-0020',supplier:'Broadway Parts',sku:'MNT-09',ordered:20,received:20,location:'Workshop',expected:'2026-10-30',status:'Received'}
+      {id:'PO-0020',supplier:'Broadway Parts',sku:'MNT-09',ordered:20,received:20,location:'Workshop',expected:'2026-10-30',status:'Received'},
+      {id:'PO-0021',supplier:'Atlas Supplies',sku:'PPE-11',ordered:60,received:0,location:'Central warehouse',expected:'2026-11-12',status:'Ordered'},
+      {id:'PO-0022',supplier:'Metro Equipment',sku:'MNT-12',ordered:15,received:5,location:'Workshop',expected:'2026-11-09',status:'Part received'},
+      {id:'PO-0023',supplier:'Broadway Parts',sku:'ELE-15',ordered:30,received:0,location:'Central warehouse',expected:'2026-11-15',status:'Awaiting approval'},
+      {id:'PO-0024',supplier:'Atlas Supplies',sku:'CIV-20',ordered:100,received:100,location:'Lekki store',expected:'2026-11-02',status:'Received'},
+      {id:'PO-0025',supplier:'Metro Equipment',sku:'MNT-21',ordered:40,received:0,location:'Workshop',expected:'2026-11-19',status:'Draft'},
+      {id:'PO-0026',supplier:'Broadway Parts',sku:'OFF-22',ordered:20,received:0,location:'Head office',expected:'2026-11-14',status:'Ordered'}
     ],
-    receipts:[],
+    receipts:[
+      {id:'GRN-0018',order:'PO-0019',sku:'PPE-02',qty:20,location:'Lekki store',deliveryRef:'MET-INV-018',date:'2026-11-02',supplier:'Metro Equipment'},
+      {id:'GRN-0019',order:'PO-0020',sku:'MNT-09',qty:20,location:'Workshop',deliveryRef:'BWP-INV-144',date:'2026-10-30',supplier:'Broadway Parts'},
+      {id:'GRN-0020',order:'PO-0022',sku:'MNT-12',qty:5,location:'Workshop',deliveryRef:'MET-INV-023',date:'2026-11-04',supplier:'Metro Equipment'},
+      {id:'GRN-0021',order:'PO-0024',sku:'CIV-20',qty:100,location:'Lekki store',deliveryRef:'ATL-INV-201',date:'2026-11-02',supplier:'Atlas Supplies'}
+    ],
     batches:[
       {lot:'LOT-ELE-003',sku:'ELE-04',location:'Central warehouse',qty:120,expires:'2027-07-31',status:'Available'},
       {lot:'LOT-MNT-009',sku:'MNT-09',location:'Workshop',qty:11,expires:'2027-01-30',status:'Available'},
-      {lot:'LOT-MNT-Q02',sku:'MNT-09',location:'Workshop',qty:2,expires:'2026-11-15',status:'Quarantined'}
+      {lot:'LOT-MNT-Q02',sku:'MNT-09',location:'Workshop',qty:2,expires:'2026-11-15',status:'Quarantined'},
+      {lot:'LOT-CIV-020',sku:'CIV-20',location:'Lekki store',qty:60,expires:'2027-04-30',status:'Available'},
+      {lot:'LOT-ELE-015',sku:'ELE-15',location:'Central warehouse',qty:15,expires:'2028-08-31',status:'Available'},
+      {lot:'LOT-MNT-021',sku:'MNT-21',location:'Workshop',qty:12,expires:'2027-01-20',status:'Available'},
+      {lot:'LOT-MNT-Q21',sku:'MNT-21',location:'Workshop',qty:2,expires:'2026-12-01',status:'Quarantined'}
     ],
     transfers:[
       {id:'TRF-0032',sku:'PPE-01',qty:4,from:'Central warehouse',to:'Lekki store',status:'Draft'},
-      {id:'TRF-0033',sku:'PPE-02',qty:2,from:'Lekki store',to:'Workshop',status:'Draft'}
+      {id:'TRF-0033',sku:'PPE-02',qty:2,from:'Lekki store',to:'Workshop',status:'Draft'},
+      {id:'TRF-0034',sku:'PPE-11',qty:6,from:'Central warehouse',to:'Lekki store',status:'Draft'},
+      {id:'TRF-0035',sku:'MNT-21',qty:3,from:'Workshop',to:'Central warehouse',status:'In transit'},
+      {id:'TRF-0036',sku:'ELE-04',qty:10,from:'Central warehouse',to:'Workshop',status:'Received'},
+      {id:'TRF-0037',sku:'OFF-22',qty:2,from:'Head office',to:'Central warehouse',status:'Draft'}
     ],
     counts:[
       {id:'CNT-0012',sku:'PPE-01',location:'Central warehouse',status:'Scheduled',counted:null,reason:''},
-      {id:'CNT-0013',sku:'PPE-02',location:'Lekki store',status:'Scheduled',counted:null,reason:''}
+      {id:'CNT-0013',sku:'PPE-02',location:'Lekki store',status:'Scheduled',counted:null,reason:''},
+      {id:'CNT-0014',sku:'MNT-12',location:'Workshop',status:'Review variance',counted:7,reason:'One hose awaiting reconciliation'},
+      {id:'CNT-0015',sku:'CIV-20',location:'Lekki store',status:'Scheduled',counted:null,reason:''},
+      {id:'CNT-0016',sku:'PPE-11',location:'Central warehouse',status:'Posted',counted:45,reason:'Verified on shelf',variance:0},
+      {id:'CNT-0017',sku:'OFF-22',location:'Head office',status:'Scheduled',counted:null,reason:''}
     ],
     assets:[
       {tag:'AST-0244',name:'Laptop',holder:'Ada Okafor',location:'Head office',condition:'Good',status:'Assigned',serial:'LAP-2026-001',warranty:'2027-06-01'},
       {tag:'AST-0245',name:'Generator',holder:'Facilities team',location:'Lekki store',condition:'Service due',status:'In use',serial:'GEN-2025-012',warranty:'2026-11-15'},
-      {tag:'AST-0246',name:'Printer',holder:'',location:'Central warehouse',condition:'Good',status:'Available',serial:'PRN-2026-031',warranty:'2026-10-10'}
+      {tag:'AST-0246',name:'Printer',holder:'',location:'Central warehouse',condition:'Good',status:'Available',serial:'PRN-2026-031',warranty:'2026-10-10'},
+      {tag:'AST-0247',name:'Forklift',holder:'Tunde Bello',location:'Central warehouse',condition:'Inspection due',status:'In use',serial:'FL-2024-008',warranty:'2027-02-16'},
+      {tag:'AST-0248',name:'Tablet',holder:'Amina Yusuf',location:'Head office',condition:'Good',status:'Assigned',serial:'TAB-2026-004',warranty:'2027-08-30'},
+      {tag:'AST-0249',name:'Portable generator',holder:'',location:'Workshop',condition:'Good',status:'Available',serial:'GEN-2026-027',warranty:'2027-09-01'},
+      {tag:'AST-0250',name:'Laser distance meter',holder:'Ada Okafor',location:'Lekki store',condition:'Calibration due',status:'Assigned',serial:'LDM-2025-017',warranty:'2026-12-15'},
+      {tag:'AST-0251',name:'Office monitor',holder:'Amaka Obi',location:'Head office',condition:'Good',status:'Assigned',serial:'MON-2026-015',warranty:'2028-01-20'}
     ],
     activity:[{id:'ACT-001',description:'Workspace demonstration records loaded',reference:'DEMO',date:'2026-10-30',type:'Demo'}],
     notes:[],
-    version:1
+    version:1,seedRevision:2
   };
-  function load() { try{const j=JSON.parse(localStorage.getItem(KEY)||'null');if(j && j.version===1 && Array.isArray(j.balances) && Array.isArray(j.orders))return j;}catch{}return deep(baseline) }
+  function load() { try{const j=JSON.parse(localStorage.getItem(KEY)||'null');if(j && j.version===1 && Array.isArray(j.balances) && Array.isArray(j.orders)){
+    if((j.seedRevision||0)<2){for(const field of ['items','balances','movements','requests','orders','receipts','batches','transfers','counts','assets']){
+      if(!Array.isArray(j[field]))j[field]=[];
+      const idFor=x=>field==='balances'?x.sku+'@'+x.location:field==='items'?x.sku:field==='batches'?x.lot:field==='assets'?x.tag:x.id;
+      const current=new Set(j[field].map(idFor));
+      for(const entry of baseline[field]){const id=idFor(entry);if(!current.has(id)){j[field].push(deep(entry));current.add(id)}}
+    }j.seedRevision=2;try{localStorage.setItem(KEY,JSON.stringify(j))}catch{}}
+    return j;
+  }}catch{}return deep(baseline) }
   let db=load();
   let ui={page:'',tab:'',query:'',status:'All',location:'All',sort:'',pageIndex:0,modal:null,selected:null,feedback:'',period:'This week'};
   function save(){try{localStorage.setItem(KEY,JSON.stringify(db))}catch{}}
@@ -283,8 +346,8 @@
   function toolbar(page,cols,data){let statuses=[...new Set(data.rows.map(r=>r.status).filter(Boolean))];let locations=db.locations;
     return `<div class="pim-tools"><div class="pim-search"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><input data-pim-input="search" placeholder="Search ${esc(META[page]?.[0]?.toLowerCase()||'records')}..." value="${esc(ui.query)}" aria-label="Search visible records"/></div><label class="pim-filter"><span>Status</span><select data-pim-change="status"><option>All</option>${statuses.map(s=>`<option ${ui.status===s?'selected':''}>${esc(s)}</option>`).join('')}</select></label><label class="pim-filter"><span>Location</span><select data-pim-change="location"><option>All</option>${locations.map(loc=>`<option ${ui.location===loc?'selected':''}>${esc(loc)}</option>`).join('')}</select></label>${softBtn('Export CSV','export')}</div>`;
   }
-  function rowsHtml(page,data){const cols=data.columns,hasStatus=cols.some(x=>/status/i.test(x));ui.columns=cols;let entries=data.rows.filter(r=>!ui.query||[...r.values,r.id].join(' ').toLowerCase().includes(ui.query.toLowerCase())).filter(r=>ui.status==='All'||r.status===ui.status||r.values.includes(ui.status)).filter(r=>ui.location==='All'||r.values.includes(ui.location));const ordered=entries.slice().sort((a,b)=>ui.sort==='Descending'?b.id.localeCompare(a.id):a.id.localeCompare(b.id));const pg=8,nPages=Math.max(1,Math.ceil(ordered.length/pg));ui.pageIndex=Math.min(ui.pageIndex,nPages-1);const shown=ordered.slice(ui.pageIndex*pg,(ui.pageIndex+1)*pg);return `<div class="pim-table-wrap"><table class="pim-table"><thead><tr>${cols.map(c=>`<th scope="col">${esc(c)}</th>`).join('')}<th scope="col"><span class="pim-sr">Actions</span></th></tr></thead><tbody>${shown.map(r=>`<tr>${r.values.map((v,i)=>`<td data-label="${esc(cols[i]||'')}">${hasStatus&&i===cols.length-1?status(v):i===0?`<button class="pim-table-link" data-pim-action="detail" data-id="${esc(r.id)}">${esc(v)}</button>`:esc(v)}</td>`).join('')}<td class="pim-row-actions">${(r.actions||[]).filter(a=>a!=='Details').slice(0,1).map(a=>softBtn(a,'row-op',`data-op="${esc(a)}" data-id="${esc(r.id)}"`)).join('')}${softBtn('View','detail',`data-id="${esc(r.id)}"`)}</td></tr>`).join('')}</tbody></table>${!shown.length?`<div class="pim-empty"><strong>No matching records</strong><p>Change the filters or choose another view.</p>${softBtn('Clear filters','clear-filters')}</div>`:''}</div><div class="pim-table-foot"><span>${ordered.length} records · ${shown.length?ui.pageIndex*pg+1:0}–${ui.pageIndex*pg+shown.length} shown</span><div>${softBtn('Previous','previous',ui.pageIndex===0?'disabled':'')}${softBtn('Next','next',ui.pageIndex===nPages-1?'disabled':'')}</div></div>`;}
-  function tabsHtml(page,tabs,active){return `<nav class="pim-tabs" aria-label="${esc(META[page]?.[0]||page)} views">${tabs.map(tab=>`<button type="button" data-pim-action="tab" data-tab="${esc(tab)}" class="${tab===active?'active':''}" aria-current="${tab===active?'page':'false'}">${esc(tab)}</button>`).join('')}</nav>`}
+  function rowsHtml(page,data){const cols=data.columns,hasStatus=cols.some(x=>/status/i.test(x));ui.columns=cols;let entries=data.rows.filter(r=>!ui.query||[...r.values,r.id].join(' ').toLowerCase().includes(ui.query.toLowerCase())).filter(r=>ui.status==='All'||r.status===ui.status||r.values.includes(ui.status)).filter(r=>ui.location==='All'||r.values.includes(ui.location));const ordered=ui.sort==='Descending'?entries.slice().reverse():entries;const pg=8,nPages=Math.max(1,Math.ceil(ordered.length/pg));ui.pageIndex=Math.min(ui.pageIndex,nPages-1);const shown=ordered.slice(ui.pageIndex*pg,(ui.pageIndex+1)*pg);return `<div class="pim-table-wrap"><table class="pim-table"><thead><tr>${cols.map(c=>`<th scope="col">${esc(c)}</th>`).join('')}<th scope="col"><span class="pim-sr">Actions</span></th></tr></thead><tbody>${shown.map(r=>`<tr>${r.values.map((v,i)=>`<td data-label="${esc(cols[i]||'')}">${hasStatus&&i===cols.length-1?status(v):i===0?`<button class="pim-table-link" data-pim-action="detail" data-id="${esc(r.id)}">${esc(v)}</button>`:esc(v)}</td>`).join('')}<td class="pim-row-actions">${(r.actions||[]).filter(a=>a!=='Details').slice(0,1).map(a=>softBtn(a,'row-op',`data-op="${esc(a)}" data-id="${esc(r.id)}"`)).join('')}${softBtn('View','detail',`data-id="${esc(r.id)}"`)}</td></tr>`).join('')}</tbody></table>${!shown.length?`<div class="pim-empty"><strong>No matching records</strong><p>Change the filters or choose another view.</p>${softBtn('Clear filters','clear-filters')}</div>`:''}</div><div class="pim-table-foot"><span>${ordered.length} records · ${shown.length?ui.pageIndex*pg+1:0}–${ui.pageIndex*pg+shown.length} shown</span><div>${softBtn('Previous','previous',ui.pageIndex===0?'disabled':'')}${softBtn('Next','next',ui.pageIndex===nPages-1?'disabled':'')}</div></div>`;}
+  function tabsHtml(page,tabs,active){return `<nav class="pim-tabs" role="group" aria-label="${esc(META[page]?.[0]||page)} views">${tabs.map(tab=>`<button type="button" data-pim-action="tab" data-tab="${esc(tab)}" class="${tab===active?'active':''}" aria-pressed="${tab===active}">${esc(tab)}</button>`).join('')}</nav>`}
   function itemSelect(name='sku',selected=''){return `<label>Item / SKU <span class="pim-required">*</span><select required name="${name}"><option value="">Choose an item</option>${db.items.map(i=>`<option value="${esc(i.sku)}" ${i.sku===selected?'selected':''}>${esc(i.name)} · ${esc(i.sku)} (${esc(i.unit)})</option>`).join('')}</select></label>`}
   function locationSelect(name='location',selected=''){return `<label>Location <span class="pim-required">*</span><select required name="${name}"><option value="">Choose location</option>${db.locations.filter(l=>l!=='Quarantine zone').map(l=>`<option value="${esc(l)}" ${l===selected?'selected':''}>${esc(l)}</option>`).join('')}</select></label>`}
   const input=(name,label,type='text',req=true,extra='')=>`<label>${esc(label)}${req?' <span class="pim-required">*</span>':''}<input name="${name}" type="${type}" ${req?'required':''} ${extra} /></label>`;

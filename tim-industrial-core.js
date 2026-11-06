@@ -47,10 +47,46 @@
     const people=[{id:'eng1',name:'Aisha Bello',title:key==='aviation'?'B1 Licensed Engineer':'Senior Technician',categories:pack.tools.map(t=>t[1]),validUntil:iso(200),site:pack.sites[0]}, {id:'eng2',name:'Tunde Adeyemi',title:'Technician',categories:['Hand tools','Power tools','Inspection tools'],validUntil:iso(60),site:pack.sites[1]},{id:'eng3',name:'Ngozi Eze',title:'Contractor',categories:['Hand tools'],validUntil:iso(-5),site:pack.sites[2]}];
     let p={key,role:'Admin',online:true,config:{requireScan:true,dualSign:true,inspectionWindow:30,permitRequired:key==='oilgas'||key==='utilities'||key==='rail',hardStopOnExpiry:true,leadDays:30},tools,kits,people,requests:[{id:pre+'-REQ-001',kitId:kits[0].id,personId:'eng1',assetRef:pack.refs[0],site:pack.sites[0],due:iso(8),status:'Approved',permitRef:pack.refs[0],created:stamp(),approver:'Supervisor',purpose:'Scheduled maintenance'},{id:pre+'-REQ-002',kitId:kits[1].id,personId:'eng2',assetRef:pack.refs[1],site:pack.sites[0],due:iso(7),status:'Pending',created:stamp(),purpose:'Tool request under review'}],issues:[{id:pre+'-ISS-001',kitId:kits[2].id,personId:'eng1',site:pack.sites[1],assetRef:pack.refs[0],issued:iso(-5),due:iso(-1),status:'Issued',scanned:kits[2].toolIds.slice(),signedByStores:'Demo Storekeeper',signedByReceiver:'Aisha Bello'}],transfers:[],inspections:[{id:pre+'-INSP-001',toolId:tools[4].id,result:'Failed',inspector:'Ngozi Eze',date:iso(-2),notes:'Pre-use damage detected; quarantine required'}],calibrations:[],workorders:[{id:pre+'-WO-001',toolId:tools[4].id,owner:'Maintenance technician',description:'Investigate damaged equipment',due:iso(4),status:'Open',hours:0,parts:[],evidence:''}],exceptions:[],workpacks:pack.refs.map((ref,i)=>({id:pre+'-WP-'+String(i+1).padStart(3,'0'),assetRef:ref,site:pack.sites[Math.min(i,pack.sites.length-1)],owner:i?'Technical operations':'Workpack lead',status:'In progress',created:stamp(),closed:null,controls:null})),kitTemplates:[],parts:[{id:pre+'-SP-001',name:'Replacement seal kit',qty:10,min:4},{id:pre+'-SP-002',name:'Tool battery',qty:4,min:3},{id:pre+'-SP-003',name:'Service gasket',qty:2,min:5}],offlineQueue:[],audit:[],notes:[],scans:[],serial:1};
     p.audit.push({id:pre+'-EVT-000',at:stamp(),actor:'System',action:'Demo baseline initialised',record:key,summary:'Illustrative local records loaded',prevHash:'GENESIS',hash:'GENESIS'});
+    p.requests.push(
+      {id:pre+'-REQ-003',kitId:kits[0].id,personId:'eng2',assetRef:'Scheduled workshop inspection',site:pack.sites[0],due:iso(12),status:'Pending',created:stamp(),purpose:'Routine tool issue request'},
+      {id:pre+'-REQ-004',kitId:kits[1].id,personId:'eng3',assetRef:'Closed reference from previous shift',site:pack.sites[2],due:iso(15),status:'Rejected',reason:'Recipient authorisation expired',created:stamp(),purpose:'Historical rejected request'}
+    );
+    p.issues.push(
+      {id:pre+'-ISS-002',kitId:kits[0].id,personId:'eng2',site:pack.sites[0],assetRef:'Historical inspection job',issued:iso(-12),due:iso(-9),returned:iso(-9),status:'Returned',scanned:kits[0].toolIds.slice(),signedByStores:'Demo Storekeeper',signedByReceiver:'Tunde Adeyemi'},
+      {id:pre+'-ISS-003',kitId:kits[1].id,personId:'eng1',site:pack.sites[0],assetRef:'Historical maintenance task',issued:iso(-22),due:iso(-20),returned:iso(-19),status:'Returned',scanned:kits[1].toolIds.slice(),signedByStores:'Demo Storekeeper',signedByReceiver:'Aisha Bello'}
+    );
+    p.inspections.push(
+      {id:pre+'-INSP-002',toolId:tools[0].id,result:'Passed',inspector:'Aisha Bello',date:iso(-4),notes:'Serial and condition verified',kind:'Pre-use'},
+      {id:pre+'-INSP-003',toolId:tools[2].id,result:'Passed',inspector:'Tunde Adeyemi',date:iso(-1),notes:'Routine visual inspection',kind:'Scheduled'}
+    );
+    p.calibrations.push(
+      {id:pre+'-CAL-001',toolId:tools[0].id,provider:'Metro Labs',certificate:pre+'-CERT-001',standard:'Illustrative local calibration record',nextDue:tools[0].calibrationDue,date:iso(-50),notes:'Demo certificate reference only'},
+      {id:pre+'-CAL-002',toolId:tools[3].id,provider:'Atlas Labs',certificate:pre+'-CERT-002',standard:'Illustrative local calibration record',nextDue:tools[3].calibrationDue,date:iso(-90),notes:'Overdue follow-up required'}
+    );
+    p.workorders.push(
+      {id:pre+'-WO-002',toolId:tools[1].id,owner:'Tunde Adeyemi',description:'Inspect drive assembly',due:iso(7),status:'Open',hours:0,parts:[],evidence:''},
+      {id:pre+'-WO-003',toolId:tools[2].id,owner:'Aisha Bello',description:'Routine preventive service',due:iso(-10),status:'Completed',closed:iso(-10),hours:2,parts:[],evidence:'Visual checks and function test recorded'},
+      {id:pre+'-WO-004',toolId:tools[4].id,owner:'Workshop maintenance',description:'Replace damaged component',due:iso(9),status:'Awaiting parts',hours:0,parts:[],evidence:''}
+    );
+    p.exceptions.push({id:pre+'-EXC-001',type:'Label mismatch',kitId:kits[0].id,toolId:tools[1].id,details:'Asset tag did not match shelf label',assetRef:'Historical warehouse check',status:'Resolved',created:iso(-20),closed:iso(-18),outcome:'Found',severity:'Low',escalated:false,comments:[]});
+    p.workpacks.push({id:pre+'-WP-003',assetRef:'Preventive service register',site:pack.sites[2],owner:'Maintenance lead',status:'In progress',created:stamp(),closed:null,controls:null});
+    p.parts.push({id:pre+'-SP-004',name:'Protective sleeve',qty:16,min:6},{id:pre+'-SP-005',name:'Replacement connector',qty:3,min:5});
+    for(const [i,action,record] of [['Recorded toolbox return',pre+'-ISS-002'],['Completed inspection',pre+'-INSP-002'],['Calibration review due',pre+'-CAL-002']].map((entry,i)=>[i,...entry])){
+      const prevHash=p.audit.at(-1).hash,ev={id:pre+'-EVT-00'+(i+1),at:stamp(),actor:'Demo Operations',action,record,summary:'Seeded historical example',prevHash};
+      ev.hash=simpleHash(JSON.stringify(ev));p.audit.push(ev);
+    }
     return p;
   }
-  function seed(){let profiles={};Object.keys(INDUSTRIES).forEach(x=>profiles[x]=seedProfile(x));return {version:1,active:'aviation',profiles};}
-  function restore(){try{let o=JSON.parse(localStorage.getItem(KEY));if(o?.version===1&&o.profiles?.aviation){for(const key of Object.keys(INDUSTRIES)){let p=o.profiles[key];if(!p)continue;if(!Array.isArray(p.workpacks))p.workpacks=seedProfile(key).workpacks;if(!Array.isArray(p.kitTemplates))p.kitTemplates=[];}return o}}catch{}return seed();}
+  function seed(){let profiles={};Object.keys(INDUSTRIES).forEach(x=>profiles[x]=seedProfile(x));return {version:1,seedRevision:2,active:'aviation',profiles};}
+  function restore(){try{let o=JSON.parse(localStorage.getItem(KEY));if(o?.version===1&&o.profiles?.aviation){for(const key of Object.keys(INDUSTRIES)){
+    let p=o.profiles[key];if(!p)continue;
+    if(!Array.isArray(p.workpacks))p.workpacks=seedProfile(key).workpacks;
+    if(!Array.isArray(p.kitTemplates))p.kitTemplates=[];
+    if((o.seedRevision||0)<2){const fresh=seedProfile(key);for(const field of ['requests','issues','inspections','calibrations','workorders','exceptions','workpacks','parts']){
+      if(!Array.isArray(p[field]))p[field]=[];const existing=new Set(p[field].map(r=>r.id));
+      for(const rec of fresh[field])if(!existing.has(rec.id)){p[field].push(clone(rec));existing.add(rec.id)}
+    }}
+  }if((o.seedRevision||0)<2){o.seedRevision=2;try{localStorage.setItem(KEY,JSON.stringify(o))}catch{}}return o}}catch{}return seed();}
   let store=restore(); let current=()=>store.profiles[store.active];
   function persist(){try{localStorage.setItem(KEY,JSON.stringify(store))}catch{}}
   function simpleHash(string){let h=2166136261;for(let i=0;i<string.length;i++){h^=string.charCodeAt(i);h=Math.imul(h,16777619)}return (h>>>0).toString(16).padStart(8,'0')}
