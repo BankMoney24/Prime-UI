@@ -51,7 +51,7 @@ test('Tabs, searchable table and export render on module pages',()=>{
  const html=set('PIM','inventory');assert.ok(html.includes('data-tab="Movements"'));assert.ok(html.includes('module-filter'));assert.ok(html.includes('data-action="export"'));
 });
 test('Point of Sale has product catalog and demo checkout',()=>{
- const html=set('RIM','pos');assert.ok(html.includes('New sale'));assert.ok(html.includes('Wireless mouse'));assert.ok(html.includes('Collect demo payment'));
+ const html=set('RIM','pos');assert.ok(html.includes('New sale'));assert.ok(html.includes('Wireless mouse'));assert.ok(html.includes('Review demo payment'));
 });
 test('Modal creation has validation and specific fields',()=>{
  set('PIM','requests');const s=vm.runInContext("S.modal={type:'create',moduleId:'requests',title:'Create request'};render();",ctx);assert.ok(root.innerHTML.includes('Needed by'));assert.ok(root.innerHTML.includes('Quantity'));
